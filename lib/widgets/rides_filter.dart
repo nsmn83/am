@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/rides_provider.dart';
 
 class RidesFilterWidget extends StatefulWidget {
-  const RidesFilterWidget({Key? key}) : super(key: key);
+  const RidesFilterWidget({super.key});
 
   @override
   State<RidesFilterWidget> createState() => _RidesFilterWidgetState();

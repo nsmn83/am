@@ -27,12 +27,18 @@ class AuthProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final success = await _authService.login(email, password);
+    final result = await _authService.login(email, password);
 
     _isLoading = false;
+    
+    if (result != null) {
+      _user = result['user'] as User; // Store the user
+      notifyListeners();
+      return true;
+    }
+    
     notifyListeners();
-
-    return success;
+    return false;
   }
 
   /// Rejestracja
@@ -40,17 +46,23 @@ class AuthProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final success = await _authService.register(username, email, password1, password2);
+    final result = await _authService.register(username, email, password1, password2);
 
     _isLoading = false;
+    
+    if (result != null) {
+      _user = result['user'] as User; // Store the user
+      notifyListeners();
+      return true;
+    }
+    
     notifyListeners();
-
-    return success;
+    return false;
   }
 
-  /// Wylogowanie
   Future<void> logout() async {
     await _authService.logout();
+    _user = null; // Clear the user
     notifyListeners();
   }
 

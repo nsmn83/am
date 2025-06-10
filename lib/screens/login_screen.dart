@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:am_project/services/auth_service.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart'; // Import AuthProvider
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,7 +12,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final AuthService _authService = AuthService();
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -25,7 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    final success = await _authService.login(email, password);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final success = await authProvider.login(email, password);
 
     setState(() {
       _isLoading = false;
@@ -61,9 +62,9 @@ class _LoginScreenState extends State<LoginScreen> {
             if (_errorMessage != null)
               Text(_errorMessage!, style: TextStyle(color: Colors.red)),
             SizedBox(height: 10),
-            _isLoading 
-              ? CircularProgressIndicator() 
-              : ElevatedButton(onPressed: _login, child: Text('Zaloguj')),
+            _isLoading
+                ? CircularProgressIndicator()
+                : ElevatedButton(onPressed: _login, child: Text('Zaloguj')),
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/register'),
               child: Text('Nie masz konta? Zarejestruj się'),

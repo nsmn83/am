@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/rides_list.dart';
 import '../providers/rides_provider.dart';
-// Import AddRideScreen from its own file
 
 class MyRidesScreen extends StatefulWidget {
   const MyRidesScreen({super.key});
@@ -15,7 +14,7 @@ class _MyRidesScreenState extends State<MyRidesScreen> {
   @override
   void initState() {
     super.initState();
-    // Pobierz przejazdy użytkownika przy inicjalizacji widgetu
+    // Fetch user's rides on widget initialization
     Future.microtask(() => 
       Provider.of<RidesProvider>(context, listen: false).fetchMyRides()
     );
@@ -24,7 +23,7 @@ class _MyRidesScreenState extends State<MyRidesScreen> {
   @override
   Widget build(BuildContext context) {
     final ridesProvider = Provider.of<RidesProvider>(context);
-    final myRides = ridesProvider.myRides; // załóżmy, że fetchMyRides ustawia rides na przejazdy użytkownika
+    final myRides = ridesProvider.myRides;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,12 +38,16 @@ class _MyRidesScreenState extends State<MyRidesScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/add_ride');
+        onPressed: () async {
+          // Navigate to AddRideScreen and wait for result
+          final result = await Navigator.pushNamed(context, '/add_ride');
+          if (result == true && mounted) {
+            // Reload rides if a ride was added successfully
+            await Provider.of<RidesProvider>(context, listen: false).fetchMyRides();
+          }
         },
         child: const Icon(Icons.add),
       ),
     );
   }
 }
-

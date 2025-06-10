@@ -92,7 +92,7 @@ class RideDetailsList extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: ride.requests.map((request) {
                   return Text(
-                    'Passenger: ${request.person?.username ?? 'Unknown'}, Status: ${request.status}',
+                    'Passenger: ${request.person.username ?? 'Unknown'}, Status: ${request.status}',
                   );
                 }).toList(),
               ),

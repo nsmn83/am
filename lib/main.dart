@@ -13,6 +13,8 @@ import 'services/rides_service.dart';
 import 'models/ride.dart';
 
 void main() {
+WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     MultiProvider(
       providers: [

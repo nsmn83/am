@@ -130,7 +130,7 @@ class _AddRideFormState extends State<AddRideForm> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Przejazd został dodany!')),
         );
-        Navigator.pop(context);
+        Navigator.pop(context, true); // Return true to indicate success
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Nie udało się dodać przejazdu')),
