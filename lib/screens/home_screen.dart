@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../widgets/rides_filter.dart';
 import '../widgets/rides_list.dart';
 import '../widgets/app_drawer.dart';
-import '../providers/rides_provider.dart';
-import '../providers/auth_provider.dart';
-import 'add_ride_screen.dart'; // Import AddRideScreen from its own file
+// Import AddRideScreen from its own file
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

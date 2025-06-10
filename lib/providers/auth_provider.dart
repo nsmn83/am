@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'package:dio/dio.dart';
+import '../models/user.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthService _authService = AuthService();
+
+  User? _user;
+  User? get user => _user;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;

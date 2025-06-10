@@ -13,8 +13,12 @@ class RidesProvider with ChangeNotifier {
   String? _error;
   String? get error => _error;
 
-  List<Ride> _rides = [];
-  List<Ride> get rides => _rides;
+List<Ride> _rides = [];
+List<Ride> get rides => _rides;
+
+List<Ride> _myRides = [];
+List<Ride> get myRides => _myRides;
+
 
 Future<void> fetchMyRides() async {
   _isLoading = true;
@@ -22,7 +26,7 @@ Future<void> fetchMyRides() async {
   notifyListeners();
 
   try {
-    _rides = await _ridesService.fetchMyRides();
+    _myRides = await _ridesService.fetchMyRides();
   } catch (e) {
     _error = e.toString();
   } finally {

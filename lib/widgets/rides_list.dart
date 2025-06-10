@@ -4,11 +4,15 @@ import '../providers/rides_provider.dart';
 import '../models/ride.dart';
 
 class RidesListWidget extends StatelessWidget {
-  const RidesListWidget({super.key});
+  final List<Ride>? ridesList;
+
+  const RidesListWidget({super.key, this.ridesList});
 
   @override
   Widget build(BuildContext context) {
     final ridesProvider = Provider.of<RidesProvider>(context);
+
+    final ridesToShow = ridesList ?? ridesProvider.rides;
 
     if (ridesProvider.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -23,16 +27,15 @@ class RidesListWidget extends StatelessWidget {
       );
     }
 
-    if (ridesProvider.rides.isEmpty) {
+    if (ridesToShow.isEmpty) {
       return const Center(child: Text('No rides found. Try searching with different filters.'));
     }
 
     return Expanded(
       child: ListView.builder(
-        itemCount: ridesProvider.rides.length,
+        itemCount: ridesToShow.length,
         itemBuilder: (context, index) {
-          final Ride ride = ridesProvider.rides[index];
-          // Debug print to inspect ride data
+          final Ride ride = ridesToShow[index];
           debugPrint('Ride $index: ${ride.toString()}');
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -52,7 +55,6 @@ class RidesListWidget extends StatelessWidget {
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // Navigate to the RideDetailsScreen
                 Navigator.pushNamed(context, '/ride_details', arguments: ride);
               },
             ),
