@@ -1,26 +1,68 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../services/rides_service.dart';
+import '../models/ride.dart';
 
 class RidesProvider with ChangeNotifier {
   final RidesService _ridesService;
 
-  String _message = '';
-  bool _isLoading = false;
-  String? _error;
-
-  String get message => _message;
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-
   RidesProvider(this._ridesService);
 
-  Future<void> fetchRidesMessage() async {
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  String? _error;
+  String? get error => _error;
+
+  List<Ride> _rides = [];
+  List<Ride> get rides => _rides;
+
+Future<void> fetchMyRides() async {
+  _isLoading = true;
+  _error = null;
+  notifyListeners();
+
+  try {
+    _rides = await _ridesService.fetchMyRides();
+  } catch (e) {
+    _error = e.toString();
+  } finally {
+    _isLoading = false;
+    notifyListeners();
+  }
+}
+
+
+Future<bool> addRide(Map<String, dynamic> rideData) async {
+  _isLoading = true;
+  notifyListeners();
+
+  try {
+    await _ridesService.createRide(rideData);
+    await fetchRides(); // Odśwież listę tylko przy sukcesie
+    return true;
+  } catch (e) {
+    // Nie ustawiamy errora globalnie
+    return false;
+  } finally {
+    _isLoading = false;
+    notifyListeners();
+  }
+}
+  Future<void> fetchRides({
+    String? startAddress,
+    String? endAddress,
+    String? date,
+  }) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      _message = await _ridesService.fetchRidesMessage();
+      _rides = await _ridesService.fetchRides(
+        startAddress: startAddress,
+        endAddress: endAddress,
+        date: date,
+      );
     } catch (e) {
       _error = e.toString();
     } finally {
@@ -28,8 +70,4 @@ class RidesProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-
-  // Możesz dodać więcej metod, np.:
-  // Future<void> fetchRides() async { ... }
-  // Future<void> createRide(Ride ride) async { ... }
 }

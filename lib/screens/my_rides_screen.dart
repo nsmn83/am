@@ -7,8 +7,20 @@ import '../providers/rides_provider.dart';
 import '../providers/auth_provider.dart';
 import 'add_ride_screen.dart'; // Import AddRideScreen from its own file
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class MyRidesScreen extends StatefulWidget {
+  const MyRidesScreen({super.key});
+
+  @override
+  _MyRidesScreenState createState() => _MyRidesScreenState();
+}
+
+class _MyRidesScreenState extends State<MyRidesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // fetch your rides on init
+    Provider.of<RidesProvider>(context, listen: false).fetchMyRides();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,15 +28,19 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: const Text('Przejazdy'),
+        title: const Text('Moje Przejazdy'),
       ),
-      drawer: const AppDrawer(),
       body: const Column(
         children: [
-          RidesFilterWidget(),
           SizedBox(height: 10),
           RidesListWidget(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/add_ride');
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

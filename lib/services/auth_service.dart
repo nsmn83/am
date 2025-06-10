@@ -84,10 +84,10 @@ Future<bool> login(String email, String password) async {
     });
     print('Login response: ${response.data}');
     _token = response.data['tokens']['access'];
-    _refreshToken = response.data['tokens']['refresh'];  // <-- save refresh token too
+    _refreshToken = response.data['tokens']['refresh'];
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', _token!);
-    await prefs.setString('refresh_token', _refreshToken!);  // <-- save refresh token
+    await prefs.setString('refresh_token', _refreshToken!);
     print('Tokens saved to SharedPreferences');
     return true;
   } catch (e) {
