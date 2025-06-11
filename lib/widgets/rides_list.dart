@@ -55,7 +55,7 @@ class RidesListWidget extends StatelessWidget {
               ),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                Navigator.pushNamed(context, '/ride_details', arguments: ride);
+                Navigator.pushNamed(context, '/ride_details', arguments: ride.id);
               },
             ),
           );

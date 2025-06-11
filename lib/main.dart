@@ -13,7 +13,7 @@ import 'services/rides_service.dart';
 import 'models/ride.dart';
 
 void main() {
-WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   runApp(
     MultiProvider(
@@ -62,8 +62,8 @@ class MyApp extends StatelessWidget {
         '/myrides': (context) => MyRidesScreen(),
         '/add_ride': (context) => const AddRideScreen(),
         '/ride_details': (context) => RideDetailsScreen(
-        ride: ModalRoute.of(context)!.settings.arguments as Ride,
-    ),
+              rideId: ModalRoute.of(context)!.settings.arguments as int,
+            ),
       },
     );
   }

@@ -1,11 +1,13 @@
 import 'user.dart';
 
 class PassengerRequest {
+  final int id; // Dodane pole id
   final User person;
-  final int rideId; 
+  final int rideId;
   final String status;
 
   PassengerRequest({
+    required this.id,
     required this.person,
     required this.rideId,
     required this.status,
@@ -13,8 +15,9 @@ class PassengerRequest {
 
   factory PassengerRequest.fromJson(Map<String, dynamic> json) {
     return PassengerRequest(
-      person: User.fromJson(json['user'] as Map<String, dynamic>), 
-      rideId: json['ride'] is int ? json['ride'] as int : 0, 
+      id: json['id'] as int? ?? 0, // Parsuj id
+      person: User.fromJson(json['user'] as Map<String, dynamic>),
+      rideId: json['ride'] is int ? json['ride'] as int : 0,
       status: json['status'] as String? ?? '',
     );
   }
