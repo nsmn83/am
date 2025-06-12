@@ -1,5 +1,6 @@
 //Tutaj znajduje się wysuwany na głównym ekranie pasek boczny
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
@@ -27,28 +28,30 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.account_circle),
-            title: const Text('Mój profil'),
+            title:  Text('Mój profil'.tr()),
             onTap: () {
               Navigator.pushNamed(context, '/profile');
             },
           ),
           ListTile(
             leading: const Icon(Icons.directions_car),
-            title: const Text('Moje przejazdy'),
+            title:  Text('Moje przejazdy'.tr()),
             onTap: () {
               Navigator.pushNamed(context, '/myrides');
             },
           ),
           ListTile(
             leading: const Icon(Icons.language),
-            title: const Text('Zmień język'),
-            onTap: () {
-              // Dodaj logikę zmiany języka
+            title: Text(('Zmień język'.tr())),
+            onTap: () async{
+              if(context.locale==Locale('pl'))
+                {await context.setLocale(Locale('en'));}
+              else {await context.setLocale(Locale('pl'));}
             },
           ),
           ListTile(
             leading: const Icon(Icons.brightness_6),
-            title: const Text('Zmień motyw'),
+            title:  Text('Zmień motyw'.tr()),
             onTap: () {
               final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
               themeProvider.toggleTheme();
@@ -58,7 +61,7 @@ class AppDrawer extends StatelessWidget {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: const Text('Wyloguj się'),
+            title: Text('Wyloguj się'.tr()),
             onTap: () {
               Navigator.pushReplacementNamed(context, '/login');
             },

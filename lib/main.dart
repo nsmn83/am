@@ -1,4 +1,5 @@
 import 'package:am_project/screens/my_rides_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/home_screen.dart';
@@ -12,26 +13,33 @@ import 'providers/rides_provider.dart';
 import 'services/rides_service.dart';
 import 'models/ride.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
 
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => AuthProvider()..loadToken()),
-        Provider(
-          create: (context) => RidesService(
-            Provider.of<AuthProvider>(context, listen: false).dio,
+
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('pl')],
+      path: 'assets/translations', // ścieżka do plików JSON
+      fallbackLocale: const Locale('en'),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => AuthProvider()..loadToken()),
+          Provider(
+            create: (context) => RidesService(
+              Provider.of<AuthProvider>(context, listen: false).dio,
+            ),
           ),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => RidesProvider(
-            Provider.of<RidesService>(context, listen: false),
+          ChangeNotifierProvider(
+            create: (context) => RidesProvider(
+              Provider.of<RidesService>(context, listen: false),
+            ),
           ),
-        ),
-      ],
-      child: const MyApp(),
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -45,6 +53,9 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'My App',
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 0, 225, 255), brightness: Brightness.light),
         useMaterial3: true,

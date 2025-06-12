@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/rides_list.dart';
@@ -29,7 +30,7 @@ class _MyRidesScreenState extends State<MyRidesScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: const Text('Moje Przejazdy'),
+        title:  Text('Moje Przejazdy'.tr()),
       ),
       body: Column(
         children: [

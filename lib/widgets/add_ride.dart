@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../providers/rides_provider.dart';
 
 class AddRideForm extends StatefulWidget {
@@ -70,13 +71,7 @@ class _AddRideFormState extends State<AddRideForm> {
 
   String? _formatDateTime(DateTime? date, TimeOfDay? time) {
     if (date == null || time == null) return null;
-    final dateTime = DateTime(
-      date.year,
-      date.month,
-      date.day,
-      time.hour,
-      time.minute,
-    );
+    final dateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
     return dateTime.toIso8601String().substring(0, 19);
   }
 
@@ -90,25 +85,25 @@ class _AddRideFormState extends State<AddRideForm> {
 
     if (startTime == null || endTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Wybierz datę i godziny!')),
+        SnackBar(content: Text('select_date_time'.tr())),
       );
       return;
     }
     if (passengerCount == null || passengerCount < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Liczba pasażerów musi być liczbą dodatnią!')),
+        SnackBar(content: Text('invalid_passenger_count'.tr())),
       );
       return;
     }
     if (maxPassengers == null || maxPassengers <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Maksymalna liczba pasażerów musi być liczbą dodatnią!')),
+        SnackBar(content: Text('invalid_max_passengers'.tr())),
       );
       return;
     }
     if (passengerCount > maxPassengers) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Liczba pasażerów nie może przekraczać maksymalnej liczby!')),
+        SnackBar(content: Text('passenger_exceeds_max'.tr())),
       );
       return;
     }
@@ -128,12 +123,12 @@ class _AddRideFormState extends State<AddRideForm> {
     if (mounted) {
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Przejazd został dodany!')),
+          SnackBar(content: Text('ride_added_success'.tr())),
         );
-        Navigator.pop(context, true); // Return true to indicate success
+        Navigator.pop(context, true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Nie udało się dodać przejazdu')),
+          SnackBar(content: Text('ride_add_failed'.tr())),
         );
       }
     }
@@ -141,6 +136,8 @@ class _AddRideFormState extends State<AddRideForm> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.locale; // wymusza rebuild przy zmianie języka
+
     return Form(
       key: _formKey,
       child: ListView(
@@ -148,36 +145,40 @@ class _AddRideFormState extends State<AddRideForm> {
         children: [
           TextFormField(
             controller: _startAddressController,
-            decoration: const InputDecoration(labelText: 'Adres początkowy'),
-            validator: (value) => value!.isEmpty ? 'Wymagany adres początkowy' : null,
+            decoration: InputDecoration(labelText: 'start_address'.tr()),
+            validator: (value) =>
+            value!.isEmpty ? 'start_address_required'.tr() : null,
           ),
           TextFormField(
             controller: _endAddressController,
-            decoration: const InputDecoration(labelText: 'Adres końcowy'),
-            validator: (value) => value!.isEmpty ? 'Wymagany adres końcowy' : null,
+            decoration: InputDecoration(labelText: 'end_address'.tr()),
+            validator: (value) =>
+            value!.isEmpty ? 'end_address_required'.tr() : null,
           ),
           TextFormField(
             controller: _descriptionController,
-            decoration: const InputDecoration(labelText: 'Opis (opcjonalny)'),
+            decoration: InputDecoration(labelText: 'description_optional'.tr()),
           ),
           TextFormField(
             controller: _passengerCountController,
-            decoration: const InputDecoration(labelText: 'Liczba pasażerów'),
+            decoration: InputDecoration(labelText: 'passenger_count'.tr()),
             keyboardType: TextInputType.number,
-            validator: (value) => value!.isEmpty ? 'Wymagana liczba pasażerów' : null,
+            validator: (value) =>
+            value!.isEmpty ? 'passenger_count_required'.tr() : null,
           ),
           TextFormField(
             controller: _maxPassengersController,
-            decoration: const InputDecoration(labelText: 'Maksymalna liczba pasażerów'),
+            decoration: InputDecoration(labelText: 'max_passengers'.tr()),
             keyboardType: TextInputType.number,
-            validator: (value) => value!.isEmpty ? 'Wymagana maksymalna liczba pasażerów' : null,
+            validator: (value) =>
+            value!.isEmpty ? 'max_passengers_required'.tr() : null,
           ),
           const SizedBox(height: 16),
           ListTile(
             title: Text(
               _startDate == null
-                  ? 'Wybierz datę'
-                  : 'Data: ${_startDate!.toString().substring(0, 10)}',
+                  ? 'select_date'.tr()
+                  : '${'selected_date'.tr()}: ${_startDate!.toString().substring(0, 10)}',
             ),
             trailing: const Icon(Icons.calendar_today),
             onTap: () => _selectDate(context),
@@ -185,8 +186,8 @@ class _AddRideFormState extends State<AddRideForm> {
           ListTile(
             title: Text(
               _startTime == null
-                  ? 'Wybierz godzinę rozpoczęcia'
-                  : 'Godzina rozpoczęcia: ${_startTime!.format(context)}',
+                  ? 'select_start_time'.tr()
+                  : '${'start_time'.tr()}: ${_startTime!.format(context)}',
             ),
             trailing: const Icon(Icons.access_time),
             onTap: () => _selectStartTime(context),
@@ -194,8 +195,8 @@ class _AddRideFormState extends State<AddRideForm> {
           ListTile(
             title: Text(
               _endTime == null
-                  ? 'Wybierz godzinę zakończenia'
-                  : 'Godzina zakończenia: ${_endTime!.format(context)}',
+                  ? 'select_end_time'.tr()
+                  : '${'end_time'.tr()}: ${_endTime!.format(context)}',
             ),
             trailing: const Icon(Icons.access_time),
             onTap: () => _selectEndTime(context),
@@ -203,7 +204,7 @@ class _AddRideFormState extends State<AddRideForm> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: _submitForm,
-            child: const Text('Dodaj przejazd'),
+            child: Text('add_ride'.tr()),
           ),
         ],
       ),

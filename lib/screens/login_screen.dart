@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart'; // Import AuthProvider
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -36,15 +37,16 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       setState(() {
-        _errorMessage = 'Błąd logowania. Sprawdź dane i spróbuj ponownie.';
+        _errorMessage = 'LoginErr'.tr();
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    //context.setLocale(Locale('en'));
     return Scaffold(
-      appBar: AppBar(title: Text('Logowanie')),
+      appBar: AppBar(title: Text('Logowanie'.tr())),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -56,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: InputDecoration(labelText: 'Hasło'),
+              decoration: InputDecoration(labelText: ('Hasło'.tr())),
             ),
             SizedBox(height: 20),
             if (_errorMessage != null)
@@ -64,10 +66,16 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 10),
             _isLoading
                 ? CircularProgressIndicator()
-                : ElevatedButton(onPressed: _login, child: Text('Zaloguj')),
+                : ElevatedButton(onPressed: _login, child: Text(('Zaloguj'.tr()))),
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/register'),
-              child: Text('Nie masz konta? Zarejestruj się'),
+              child: Text(('NoAcc'.tr())),
+            ),
+            TextButton(
+              onPressed: () => {
+                if(context.locale==Locale('pl'))context.setLocale(Locale('en'))
+                else context.setLocale(Locale('pl'))},
+              child: Text('Język'.tr()),
             ),
           ],
         ),

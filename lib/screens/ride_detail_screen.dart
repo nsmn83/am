@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
+
 import '../widgets/ride_map.dart';
 import '../models/ride.dart';
 import '../models/user.dart';
@@ -36,7 +38,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: const Text('Ride Details'),
+        title: Text('ride_details'.tr()),
       ),
       body: Consumer<RidesProvider>(
         builder: (context, ridesProvider, child) {
@@ -56,13 +58,13 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
           final Ride? ride = ridesProvider.currentRide;
 
           if (ride == null) {
-            return const Center(child: Text('Ride not found.'));
+            return Center(child: Text('ride_not_found'.tr()));
           }
 
           final bool isDriver = currentUser != null && ride.driver?.id == currentUser.id;
           final bool hasPendingOrAcceptedRequest = currentUser != null &&
               ride.requests.any((request) =>
-                  request.person.id == currentUser.id &&
+              request.person.id == currentUser.id &&
                   (request.status == 'waiting' || request.status == 'accepted'));
 
           final waitingRequests = ride.requests
@@ -75,11 +77,12 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
 
               if (isDriver && waitingRequests.isNotEmpty) ...[
                 ExpansionTile(
-                  title: Text('Prośby pasażerów (${waitingRequests.length})'),
+                  title: Text('passenger_requests_count'
+                      .tr(args: [waitingRequests.length.toString()])),
                   children: waitingRequests.map((request) {
                     return ListTile(
                       title: Text(request.person.username),
-                      subtitle: Text('Email: ${request.person.email}'),
+                      subtitle: Text('email_label'.tr(args: [request.person.email])),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -92,8 +95,9 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(success
-                                      ? 'Prośba zaakceptowana'
-                                      : 'Nie udało się zaakceptować prośby: ${ridesProvider.error}'),
+                                      ? 'request_accepted'.tr()
+                                      : 'request_accept_failed'
+                                      .tr(args: [ridesProvider.error ?? ''])),
                                 ),
                               );
                             },
@@ -107,8 +111,9 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(success
-                                      ? 'Prośba odrzucona'
-                                      : 'Nie udało się odrzucić prośby: ${ridesProvider.error}'),
+                                      ? 'request_rejected'.tr()
+                                      : 'request_reject_failed'
+                                      .tr(args: [ridesProvider.error ?? ''])),
                                 ),
                               );
                             },
@@ -121,12 +126,13 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
               ],
 
               const SizedBox(height: 20),
-                  RideMap(
-      startLat: ride.startLat,
-      startLng: ride.startLng,
-      endLat: ride.endLat,
-      endLng: ride.endLng,
-    ),
+              RideMap(
+                startLat: ride.startLat,
+                startLng: ride.startLng,
+                endLat: ride.endLat,
+                endLng: ride.endLng,
+              ),
+
               if (isDriver && ride.status != 'done') ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -137,12 +143,13 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(success
-                              ? 'Ride status updated successfully'
-                              : 'Failed to update ride status: ${ridesProvider.error}'),
+                              ? 'ride_status_updated'.tr()
+                              : 'ride_status_update_failed'
+                              .tr(args: [ridesProvider.error ?? ''])),
                         ),
                       );
                     },
-                    child: const Text('Zmień status'),
+                    child: Text('change_status'.tr()),
                   ),
                 ),
               ],
@@ -159,13 +166,14 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(success
-                              ? 'Ride deleted successfully'
-                              : 'Failed to delete ride: ${ridesProvider.error}'),
+                              ? 'ride_deleted'.tr()
+                              : 'ride_delete_failed'
+                              .tr(args: [ridesProvider.error ?? ''])),
                         ),
                       );
                       if (success) Navigator.pop(context);
                     },
-                    child: const Text('Usuń przejazd'),
+                    child: Text('delete_ride'.tr()),
                   ),
                 ),
               ] else if (currentUser != null && !hasPendingOrAcceptedRequest) ...[
@@ -173,17 +181,19 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: ElevatedButton(
                     onPressed: () async {
-                      final success = await ridesProvider.requestToJoinRide(widget.rideId);
+                      final success =
+                      await ridesProvider.requestToJoinRide(widget.rideId);
                       if (!mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(success
-                              ? 'Request to join ride sent successfully'
-                              : 'Failed to send join request: ${ridesProvider.error}'),
+                              ? 'join_request_sent'.tr()
+                              : 'join_request_failed'
+                              .tr(args: [ridesProvider.error ?? ''])),
                         ),
                       );
                     },
-                    child: const Text('Dołącz do przejazdu'),
+                    child: Text('join_ride'.tr()),
                   ),
                 ),
               ],

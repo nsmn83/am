@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../widgets/rides_filter.dart';
 import '../widgets/rides_list.dart';
@@ -13,7 +14,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: const Text('Przejazdy'),
+        title:  Text('Przejazdy'.tr()),
       ),
       drawer: const AppDrawer(),
       body: const Column(

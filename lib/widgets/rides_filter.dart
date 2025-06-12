@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/rides_provider.dart';
@@ -25,6 +26,7 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
   @override
   Widget build(BuildContext context) {
     final ridesProvider = Provider.of<RidesProvider>(context);
+    final locale = context.locale;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -32,21 +34,21 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
         children: [
           TextField(
             controller: _startController,
-            decoration: const InputDecoration(
-              labelText: 'Start Address',
+            decoration:  InputDecoration(
+              labelText: 'AdresStart'.tr(),
             ),
           ),
           TextField(
             controller: _endController,
-            decoration: const InputDecoration(
-              labelText: 'End Address',
+            decoration: InputDecoration(
+              labelText: 'AdresEnd'.tr(),
             ),
           ),
           TextField(
             controller: _dateController,
             keyboardType: TextInputType.datetime,
-            decoration: const InputDecoration(
-              labelText: 'Date (YYYY-MM-DD)',
+            decoration:  InputDecoration(
+              labelText: 'DateForm'.tr(),
             ),
           ),
           const SizedBox(height: 16),
@@ -60,8 +62,8 @@ onPressed: () {
     if (parsedDate == null) {
       // Show an error using a dialog or snackbar
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a valid date in YYYY-MM-DD format.'),
+        SnackBar(
+          content: Text('DateFormErr'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -75,7 +77,7 @@ onPressed: () {
     date: dateText.isNotEmpty ? dateText : null,
   );
 },
-            child: const Text('Search Rides'),
+            child:  Text('Search Rides'.tr()),
           ),
           const SizedBox(height: 16),
           if (ridesProvider.error != null)

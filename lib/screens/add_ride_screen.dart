@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../widgets/add_ride.dart';
 
@@ -13,7 +14,7 @@ class _AddRideScreenState extends State<AddRideScreen> {  // <-- extends State<A
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dodaj Przejazd'),
+        title:  Text('Dodaj Przejazd'.tr()),
       ),
       body: const AddRideForm(),
     );

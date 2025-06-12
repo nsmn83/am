@@ -4,7 +4,8 @@ import 'package:am_project/models/user.dart';
 
 class AuthService {
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'http://192.168.0.107:8000/api/',
+    //baseUrl: 'http://192.168.0.107:8000/api/',
+    baseUrl: 'http://127.0.0.1:8000/api/',
     headers: {'Content-Type': 'application/json'},
   ));
 

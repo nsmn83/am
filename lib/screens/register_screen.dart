@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 
@@ -28,11 +29,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password1 = _passwordController.text;
     final password2 = _confirmPasswordController.text;
 
-    // Podstawowa walidacja
     if (username.isEmpty || email.isEmpty || password1.isEmpty || password2.isEmpty) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Wszystkie pola są wymagane';
+        _errorMessage = 'all_fields_required'.tr();
       });
       return;
     }
@@ -40,12 +40,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (password1 != password2) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Hasła nie są zgodne';
+        _errorMessage = 'passwords_not_matching'.tr();
       });
       return;
     }
 
-    // Wywołanie AuthProvider
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.register(username, email, password1, password2);
 
@@ -54,11 +53,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     if (success) {
-      // Przekierowanie do ekranu głównego
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       setState(() {
-        _errorMessage = 'Rejestracja nie powiodła się. Spróbuj ponownie.';
+        _errorMessage = 'registration_failed'.tr();
       });
     }
   }
@@ -66,40 +64,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Rejestracja')),
+      appBar: AppBar(title: Text('register'.tr())),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             TextField(
               controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Nazwa użytkownika'),
+              decoration: InputDecoration(labelText: 'username'.tr()),
             ),
             TextField(
               controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(labelText: 'email'.tr()),
               keyboardType: TextInputType.emailAddress,
             ),
             TextField(
               controller: _passwordController,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Hasło'),
+              decoration: InputDecoration(labelText: 'password'.tr()),
             ),
             TextField(
               controller: _confirmPasswordController,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Potwierdź hasło'),
+              decoration: InputDecoration(labelText: 'confirm_password'.tr()),
             ),
             const SizedBox(height: 20),
             _isLoading
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
-                    onPressed: _register,
-                    child: const Text('Zarejestruj się'),
-                  ),
+              onPressed: _register,
+              child: Text('register_button'.tr()),
+            ),
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/login'),
-              child: const Text('Masz już konto? Zaloguj się'),
+              child: Text('already_have_account'.tr()),
             ),
             if (_errorMessage != null)
               Padding(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../models/ride.dart';
-import '../models/user.dart';
-import '../models/passenger_request.dart';
 
 class RideDetailsList extends StatelessWidget {
   final Ride ride;
@@ -14,101 +13,104 @@ class RideDetailsList extends StatelessWidget {
       children: [
         Card(
           child: ListTile(
-            title: const Text(
-              'Route',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            title: Text(
+              'route'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text('${ride.startAddress} to ${ride.endAddress}'),
+            subtitle: Text('${ride.startAddress} ${'to'.tr()} ${ride.endAddress}'),
           ),
         ),
         Card(
           child: ListTile(
-            title: const Text(
-              'Date & Time',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            title: Text(
+              'date_time'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
-              'Start: ${ride.startTime.toString().substring(0, 16)}\n'
-              'End: ${ride.endTime.toString().substring(0, 16)}',
+              '${'start'.tr()}: ${ride.startTime.toString().substring(0, 16)}\n'
+                  '${'end'.tr()}: ${ride.endTime.toString().substring(0, 16)}',
             ),
           ),
         ),
         Card(
           child: ListTile(
-            title: const Text(
-              'Driver',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            title: Text(
+              'driver'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text(ride.driver?.username ?? 'Unknown'),
+            subtitle: Text(ride.driver?.username ?? 'unknown'.tr()),
           ),
         ),
         Card(
           child: ListTile(
-            title: const Text(
-              'Passengers',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            title: Text(
+              'passengers'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text('Max: ${ride.maxPassengers}'),
+            subtitle: Text('${'max'.tr()}: ${ride.maxPassengers}'),
           ),
         ),
         Card(
           child: ListTile(
-            title: const Text(
-              'Status',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            title: Text(
+              'status'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(ride.status),
           ),
         ),
         Card(
           child: ListTile(
-            title: const Text(
-              'Description',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            title: Text(
+              'description'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text(ride.description.isNotEmpty ? ride.description : 'No description provided'),
+            subtitle: Text(
+              ride.description.isNotEmpty
+                  ? ride.description
+                  : 'no_description'.tr(),
+            ),
           ),
         ),
         Card(
           child: ListTile(
-            title: const Text(
-              'Coordinates',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            title: Text(
+              'coordinates'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
-              'Start: (${ride.startLat}, ${ride.startLng})\n'
-              'End: (${ride.endLat}, ${ride.endLng})',
+              '${'start'.tr()}: (${ride.startLat}, ${ride.startLng})\n'
+                  '${'end'.tr()}: (${ride.endLat}, ${ride.endLng})',
             ),
           ),
         ),
         if (ride.requests.isNotEmpty) ...[
           Card(
             child: ListTile(
-              title: const Text(
-                'Passenger Requests',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              title: Text(
+                'passenger_requests'.tr(),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: ride.requests.map((request) {
                   return Text(
-                    'Passenger: ${request.person.username ?? 'Unknown'}, Status: ${request.status}',
+                    '${'passenger'.tr()}: ${request.person.username ?? 'unknown'.tr()}, ${'status'.tr()}: ${request.status.tr()}',
                   );
                 }).toList(),
               ),
             ),
           ),
-        ],
         Card(
           child: ListTile(
-            title: const Text(
-              'Created At',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            title: Text(
+              'created_at'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(ride.createdAt.toString().substring(0, 16)),
           ),
         ),
       ],
-    );
+    ]);
   }
 }
