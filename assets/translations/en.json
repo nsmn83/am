@@ -11,7 +11,7 @@
   "Mój profil": "My profile",
   "Zmień motyw": "Change theme",
   "Wyloguj się": "Log out",
-  "Moje przejazdy": "My rides",
+  "Moje_Przejazdy": "My rides",
   "Przejazdy": "Rides",
   "Dodaj Przejazd": "Add ride",
   "AdresStart": "Start Adress",
@@ -83,5 +83,6 @@
   "join_ride": "Join Ride",
   "join_request_sent": "Request to join ride sent successfully",
   "join_request_failed": "Failed to send join request: {0}",
-  "change_status": "Change Status"
+  "change_status": "Change Status",
+  "UseLoc": "Use my location"
 }

@@ -84,6 +84,7 @@
   "join_ride": "Dołącz do przejazdu",
   "join_request_sent": "Prośba o dołączenie została wysłana",
   "join_request_failed": "Nie udało się wysłać prośby: {0}",
-  "change_status": "Zmień status"
+  "change_status": "Zmień status",
+  "UseLoc": "Użyj mojej lokalizacji"
 
 }

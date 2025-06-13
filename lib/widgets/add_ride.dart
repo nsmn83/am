@@ -1,10 +1,16 @@
+//import 'dart:nativewrappers/_internal/vm/lib/internal_patch.dart';
+
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../providers/rides_provider.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class AddRideForm extends StatefulWidget {
   const AddRideForm({super.key});
+
 
   @override
   _AddRideFormState createState() => _AddRideFormState();
@@ -20,6 +26,7 @@ class _AddRideFormState extends State<AddRideForm> {
   DateTime? _startDate;
   TimeOfDay? _startTime;
   TimeOfDay? _endTime;
+  String? _location;
 
   @override
   void dispose() {
@@ -71,7 +78,8 @@ class _AddRideFormState extends State<AddRideForm> {
 
   String? _formatDateTime(DateTime? date, TimeOfDay? time) {
     if (date == null || time == null) return null;
-    final dateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    final dateTime = DateTime(
+        date.year, date.month, date.day, time.hour, time.minute);
     return dateTime.toIso8601String().substring(0, 19);
   }
 
@@ -118,7 +126,9 @@ class _AddRideFormState extends State<AddRideForm> {
       'description': _descriptionController.text,
     };
 
-    final success = await Provider.of<RidesProvider>(context, listen: false).addRide(rideData);
+    final success = await Provider
+        .of<RidesProvider>(context, listen: false)
+        .addRide(rideData);
 
     if (mounted) {
       if (success) {
@@ -143,71 +153,149 @@ class _AddRideFormState extends State<AddRideForm> {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          TextFormField(
-            controller: _startAddressController,
-            decoration: InputDecoration(labelText: 'start_address'.tr()),
-            validator: (value) =>
-            value!.isEmpty ? 'start_address_required'.tr() : null,
-          ),
-          TextFormField(
-            controller: _endAddressController,
-            decoration: InputDecoration(labelText: 'end_address'.tr()),
-            validator: (value) =>
-            value!.isEmpty ? 'end_address_required'.tr() : null,
-          ),
-          TextFormField(
-            controller: _descriptionController,
-            decoration: InputDecoration(labelText: 'description_optional'.tr()),
-          ),
-          TextFormField(
-            controller: _passengerCountController,
-            decoration: InputDecoration(labelText: 'passenger_count'.tr()),
-            keyboardType: TextInputType.number,
-            validator: (value) =>
-            value!.isEmpty ? 'passenger_count_required'.tr() : null,
-          ),
-          TextFormField(
-            controller: _maxPassengersController,
-            decoration: InputDecoration(labelText: 'max_passengers'.tr()),
-            keyboardType: TextInputType.number,
-            validator: (value) =>
-            value!.isEmpty ? 'max_passengers_required'.tr() : null,
-          ),
-          const SizedBox(height: 16),
-          ListTile(
-            title: Text(
-              _startDate == null
-                  ? 'select_date'.tr()
-                  : '${'selected_date'.tr()}: ${_startDate!.toString().substring(0, 10)}',
-            ),
-            trailing: const Icon(Icons.calendar_today),
-            onTap: () => _selectDate(context),
-          ),
-          ListTile(
-            title: Text(
-              _startTime == null
-                  ? 'select_start_time'.tr()
-                  : '${'start_time'.tr()}: ${_startTime!.format(context)}',
-            ),
-            trailing: const Icon(Icons.access_time),
-            onTap: () => _selectStartTime(context),
-          ),
-          ListTile(
-            title: Text(
-              _endTime == null
-                  ? 'select_end_time'.tr()
-                  : '${'end_time'.tr()}: ${_endTime!.format(context)}',
-            ),
-            trailing: const Icon(Icons.access_time),
-            onTap: () => _selectEndTime(context),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _submitForm,
-            child: Text('add_ride'.tr()),
-          ),
+        TextFormField(
+        controller: _startAddressController,
+        decoration: InputDecoration(labelText: 'start_address'.tr()),
+        validator: (value) =>
+        value!.isEmpty ? 'start_address_required'.tr() : null,
+      ),
+      TextFormField(
+        controller: _endAddressController,
+        decoration: InputDecoration(labelText: 'end_address'.tr()),
+        validator: (value) =>
+        value!.isEmpty ? 'end_address_required'.tr() : null,
+      ),
+      TextFormField(
+        controller: _descriptionController,
+        decoration: InputDecoration(labelText: 'description_optional'.tr()),
+      ),
+      TextFormField(
+        controller: _passengerCountController,
+        decoration: InputDecoration(labelText: 'passenger_count'.tr()),
+        keyboardType: TextInputType.number,
+        validator: (value) =>
+        value!.isEmpty ? 'passenger_count_required'.tr() : null,
+      ),
+      TextFormField(
+        controller: _maxPassengersController,
+        decoration: InputDecoration(labelText: 'max_passengers'.tr()),
+        keyboardType: TextInputType.number,
+        validator: (value) =>
+        value!.isEmpty ? 'max_passengers_required'.tr() : null,
+      ),
+      const SizedBox(height: 16),
+      ListTile(
+        title: Text(
+          _startDate == null
+              ? 'select_date'.tr()
+              : '${'selected_date'.tr()}: ${_startDate!.toString().substring(
+              0, 10)}',
+        ),
+        trailing: const Icon(Icons.calendar_today),
+        onTap: () => _selectDate(context),
+      ),
+      ListTile(
+        title: Text(
+          _startTime == null
+              ? 'select_start_time'.tr()
+              : '${'start_time'.tr()}: ${_startTime!.format(context)}',
+        ),
+        trailing: const Icon(Icons.access_time),
+        onTap: () => _selectStartTime(context),
+      ),
+      ListTile(
+        title: Text(
+          _endTime == null
+              ? 'select_end_time'.tr()
+              : '${'end_time'.tr()}: ${_endTime!.format(context)}',
+        ),
+        trailing: const Icon(Icons.access_time),
+        onTap: () => _selectEndTime(context),
+      ),
+      ElevatedButton(
+        onPressed: _getCurrentLocation,
+        child: Text('UseLoc'.tr()),
+      ),
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: _submitForm,
+          child: Text('add_ride'.tr()),
+        ),
         ],
       ),
     );
   }
+
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        setState(() {
+          _location = '';
+        });
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          setState(() {
+            _location = '';
+          });
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        setState(() {
+          _location = '';
+        });
+        return;
+      }
+      //współrzędne
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      Position testPosition = Position(
+        latitude: 52.2297,
+        longitude: 21.0122,
+        timestamp: DateTime.now(),
+        accuracy: 1.0,
+        altitude: 0.0,
+        heading: 0.0,
+        speed: 0.0,
+        headingAccuracy: 0.0,
+        altitudeAccuracy: 0.0,
+        speedAccuracy: 0.0,
+      );
+
+      //reverse geocoding
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        setState(() {
+          _startAddressController.text = '${place.locality}';
+        });
+      } else {
+        setState(() {
+          _location = '';
+        });
+      }
+    } catch (e) {
+      e.toString();
+      setState(() {
+        _location = '';
+      });
+    }
+  }
+
+
 }

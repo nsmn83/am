@@ -35,7 +35,7 @@ class AppDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.directions_car),
-            title:  Text('Moje przejazdy'.tr()),
+            title:  Text('Moje_Przejazdy'.tr()),
             onTap: () {
               Navigator.pushNamed(context, '/myrides');
             },

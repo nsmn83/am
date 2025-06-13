@@ -50,7 +50,10 @@ dependencies:
   latlong2: ^0.9.1
 
   easy_localization: ^3.0.3
-  
+
+  geolocator: ^10.1.0
+
+  geocoding: ^2.2.0
 
 
 dev_dependencies:
