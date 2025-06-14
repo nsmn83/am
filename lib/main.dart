@@ -57,14 +57,14 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 0, 225, 255), brightness: Brightness.light),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 0, 225, 255), brightness: Brightness.dark),
-        useMaterial3: true,
-      ),
+ theme: ThemeData(
+  brightness: Brightness.light,
+  useMaterial3: true,
+),
+darkTheme: ThemeData(
+  brightness: Brightness.dark,
+  useMaterial3: true,
+),
       themeMode: themeProvider.currentTheme,
       initialRoute: '/login',
       routes: {

@@ -4,8 +4,9 @@ import 'package:am_project/models/user.dart';
 
 class AuthService {
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'http://192.168.0.107:8000/api/',
+    //baseUrl: 'http://192.168.0.107:8000/api/',
     //baseUrl: 'http://127.0.0.1:8000/api/',
+    baseUrl: 'http://192.168.0.178:8000/api/',
     //baseUrl:'http://10.0.2.2:8000/api/',
     headers: {'Content-Type': 'application/json'},
   ));
@@ -20,11 +21,14 @@ class AuthService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          if (_token != null) {
-            options.headers['Authorization'] = 'Bearer $_token';
-          }
-          handler.next(options);
-        },
+  // Wyklucz endpointy login i register
+  if (_token != null &&
+      !options.path.endsWith('login/') &&
+      !options.path.endsWith('register/')) {
+    options.headers['Authorization'] = 'Bearer $_token';
+  }
+  handler.next(options);
+},
         onError: (DioError error, handler) async {
           // Check if error is 401 (Unauthorized)
           if (error.response?.statusCode == 401) {
@@ -157,13 +161,29 @@ class AuthService {
     }
   }
 
-  Future<void> logout() async {
+Future<void> logout() async {
+  try {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token');
-    await prefs.remove('refresh_token');
-    _token = null;
-    _refreshToken = null;
+final refreshToken = prefs.getString('refresh_token');
+
+await _dio.post(
+  'logout/',
+  data: {'refresh': refreshToken},
+  options: Options(
+    headers: {'Authorization': 'Bearer $_token'},
+  ),
+);
+  } catch (e) {
+    print('Logout request failed: $e');
+    // Możesz zdecydować, czy w przypadku błędu i tak usuwać tokeny lokalnie
   }
 
+  // Usuwanie tokenów lokalnie
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('auth_token');
+  await prefs.remove('refresh_token');
+  _token = null;
+  _refreshToken = null;
+}
   Dio get dio => _dio;
 }

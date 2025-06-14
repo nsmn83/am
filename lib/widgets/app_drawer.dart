@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../providers/auth_provider.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -62,9 +63,12 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text('Wyloguj się'.tr()),
-            onTap: () {
-              Navigator.pushReplacementNamed(context, '/login');
-            },
+     onTap: () async {
+  Navigator.of(context).pop(); // zamknij drawer
+  final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  await authProvider.logout();
+  Navigator.pushReplacementNamed(context, '/login');
+},
           ),
         ],
       ),

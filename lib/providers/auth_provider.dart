@@ -83,11 +83,15 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
-  Future<void> logout() async {
+ Future<void> logout() async {
+  try {
     await _authService.logout();
-    _user = null; // Clear the user
-    notifyListeners();
+  } catch (e) {
+    print('Logout failed: $e');
+    // Możesz tu dodać np. retry lub inny handling
   }
-
+  _user = null; // Wyczyść dane usera niezależnie od sukcesu
+  notifyListeners();
+}
   Dio get dio => _authService.dio;
 }

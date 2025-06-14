@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../providers/rides_provider.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 
 class AddRideForm extends StatefulWidget {
   const AddRideForm({super.key});
@@ -24,7 +23,6 @@ class _AddRideFormState extends State<AddRideForm> {
   final _maxPassengersController = TextEditingController();
   DateTime? _startDate;
   TimeOfDay? _startTime;
-  TimeOfDay? _endTime;
   String? _location;
 
   @override
@@ -67,11 +65,6 @@ class _AddRideFormState extends State<AddRideForm> {
       context: context,
       initialTime: TimeOfDay.now(),
     );
-    if (pickedTime != null) {
-      setState(() {
-        _endTime = pickedTime;
-      });
-    }
   }
 
   String? _formatDateTime(DateTime? date, TimeOfDay? time) {
@@ -151,6 +144,12 @@ class _AddRideFormState extends State<AddRideForm> {
       TextFormField(
         controller: _descriptionController,
         decoration: InputDecoration(labelText: 'description_optional'.tr()),
+          validator: (value) {
+    if (value != null && value.length > 200) {
+      return 'description_too_long'.tr(); // np. "Opis nie może być dłuższy niż 200 znaków"
+    }
+    return null;
+  },
       ),
       TextFormField(
         controller: _maxPassengersController,

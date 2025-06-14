@@ -37,7 +37,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     final url = await showDialog<String>(
       context: context,
       builder: (context) {
-        final urlController = TextEditingController(text: _imageUrl);
+        final urlController = TextEditingController();
         return AlertDialog(
           title: Text('Enter new image URL'.tr()),
           content: TextField(
