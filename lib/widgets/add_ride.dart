@@ -21,7 +21,6 @@ class _AddRideFormState extends State<AddRideForm> {
   final _startAddressController = TextEditingController();
   final _endAddressController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _passengerCountController = TextEditingController();
   final _maxPassengersController = TextEditingController();
   DateTime? _startDate;
   TimeOfDay? _startTime;
@@ -33,7 +32,6 @@ class _AddRideFormState extends State<AddRideForm> {
     _startAddressController.dispose();
     _endAddressController.dispose();
     _descriptionController.dispose();
-    _passengerCountController.dispose();
     _maxPassengersController.dispose();
     super.dispose();
   }
@@ -86,20 +84,13 @@ class _AddRideFormState extends State<AddRideForm> {
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final passengerCount = int.tryParse(_passengerCountController.text);
+
     final maxPassengers = int.tryParse(_maxPassengersController.text);
     final startTime = _formatDateTime(_startDate, _startTime);
-    final endTime = _formatDateTime(_startDate, _endTime);
 
-    if (startTime == null || endTime == null) {
+    if (startTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('select_date_time'.tr())),
-      );
-      return;
-    }
-    if (passengerCount == null || passengerCount < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('invalid_passenger_count'.tr())),
       );
       return;
     }
@@ -109,19 +100,11 @@ class _AddRideFormState extends State<AddRideForm> {
       );
       return;
     }
-    if (passengerCount > maxPassengers) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('passenger_exceeds_max'.tr())),
-      );
-      return;
-    }
 
     final rideData = {
       'start_address': _startAddressController.text,
       'end_address': _endAddressController.text,
       'start_time': startTime,
-      'end_time': endTime,
-      'passenger_count': passengerCount,
       'max_passengers': maxPassengers,
       'description': _descriptionController.text,
     };
@@ -170,13 +153,6 @@ class _AddRideFormState extends State<AddRideForm> {
         decoration: InputDecoration(labelText: 'description_optional'.tr()),
       ),
       TextFormField(
-        controller: _passengerCountController,
-        decoration: InputDecoration(labelText: 'passenger_count'.tr()),
-        keyboardType: TextInputType.number,
-        validator: (value) =>
-        value!.isEmpty ? 'passenger_count_required'.tr() : null,
-      ),
-      TextFormField(
         controller: _maxPassengersController,
         decoration: InputDecoration(labelText: 'max_passengers'.tr()),
         keyboardType: TextInputType.number,
@@ -202,15 +178,6 @@ class _AddRideFormState extends State<AddRideForm> {
         ),
         trailing: const Icon(Icons.access_time),
         onTap: () => _selectStartTime(context),
-      ),
-      ListTile(
-        title: Text(
-          _endTime == null
-              ? 'select_end_time'.tr()
-              : '${'end_time'.tr()}: ${_endTime!.format(context)}',
-        ),
-        trailing: const Icon(Icons.access_time),
-        onTap: () => _selectEndTime(context),
       ),
       ElevatedButton(
         onPressed: _getCurrentLocation,

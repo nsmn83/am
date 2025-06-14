@@ -12,7 +12,6 @@ class Ride {
   final double endLat;
   final double endLng;
   final DateTime startTime;
-  final DateTime endTime;
   final int maxPassengers;
   final DateTime createdAt;
   final String status;
@@ -29,7 +28,6 @@ class Ride {
     required this.endLat,
     required this.endLng,
     required this.startTime,
-    required this.endTime,
     required this.maxPassengers,
     required this.createdAt,
     required this.status,
@@ -51,7 +49,6 @@ class Ride {
       endLat: (json['end_lat'] as num?)?.toDouble() ?? 0.0,
       endLng: (json['end_lng'] as num?)?.toDouble() ?? 0.0,
       startTime: json['start_time'] != null ? DateTime.parse(json['start_time'] as String) : DateTime.now(),
-      endTime: json['end_time'] != null ? DateTime.parse(json['end_time'] as String) : DateTime.now(),
       maxPassengers: json['max_passengers'] as int? ?? 0,
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : DateTime.now(),
       status: json['status'] as String? ?? '',

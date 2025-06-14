@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 class RideMap extends StatefulWidget {
   final double startLat;
@@ -73,32 +74,33 @@ class _RideMapState extends State<RideMap> {
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.example.your_app',
           ),
-          MarkerLayer(
-            markers: [
-              Marker(
-                point: start,
-                width: 40,
-                height: 40,
-                child: const Icon(Icons.location_on, color: Colors.green, size: 30),
-              ),
-              Marker(
-                point: end,
-                width: 40,
-                height: 40,
-                child: const Icon(Icons.flag, color: Colors.red, size: 30),
-              ),
-            ],
-          ),
+      
           if (routePoints.isNotEmpty)
             PolylineLayer(
               polylines: [
                 Polyline(
                   points: routePoints,
-                  color: Colors.blue,
+                  color: Colors.black,
                   strokeWidth: 4,
                 ),
               ],
             ),
+              MarkerLayer(
+            markers: [
+              Marker(
+                point: start,
+                width: 40,
+                height: 40,
+                child: Icon(Icons.location_on, color: Theme.of(context).colorScheme.primary, size: 30),
+              ),
+              Marker(
+                point: end,
+                width: 40,
+                height: 40,
+                child: Icon(Icons.flag, color: Theme.of(context).colorScheme.primary, size: 30),
+              ),
+            ],
+          ),
         ],
       ),
     );

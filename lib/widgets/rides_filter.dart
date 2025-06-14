@@ -26,7 +26,7 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
   @override
   Widget build(BuildContext context) {
     final ridesProvider = Provider.of<RidesProvider>(context);
-    final locale = context.locale;
+  
 
     return Padding(
       padding: const EdgeInsets.all(16.0),

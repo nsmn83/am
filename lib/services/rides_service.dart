@@ -196,4 +196,5 @@ Future<void> rejectPassengerRequest(int requestId) async {
       throw Exception('Failed to request to join ride: $e');
     }
   }
+
 }

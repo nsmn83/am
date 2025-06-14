@@ -12,6 +12,7 @@ import 'providers/theme_provider.dart';
 import 'providers/rides_provider.dart';
 import 'services/rides_service.dart';
 import 'models/ride.dart';
+import 'screens/my_profile_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
         '/ride_details': (context) => RideDetailsScreen(
               rideId: ModalRoute.of(context)!.settings.arguments as int,
             ),
+         '/my_profile': (context) => const MyProfileScreen(),
       },
     );
   }

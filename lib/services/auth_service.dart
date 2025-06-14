@@ -4,8 +4,8 @@ import 'package:am_project/models/user.dart';
 
 class AuthService {
   final Dio _dio = Dio(BaseOptions(
-    //baseUrl: 'http://192.168.0.107:8000/api/',
-    baseUrl: 'http://127.0.0.1:8000/api/',
+    baseUrl: 'http://192.168.0.107:8000/api/',
+    //baseUrl: 'http://127.0.0.1:8000/api/',
     //baseUrl:'http://10.0.2.2:8000/api/',
     headers: {'Content-Type': 'application/json'},
   ));
@@ -69,6 +69,22 @@ class AuthService {
       ),
     );
   }
+
+  Future<Map<String, dynamic>> updateUserProfile({
+  required String image,
+  required String bio,
+}) async {
+  final data = {
+    'bio': bio,
+    'profile_image_url': image,
+  };
+
+  final response = await _dio.patch('user/edit-bio/', data: data);
+
+  return response.data;
+}
+
+
 
   /// Initialize token from shared preferences
   Future<void> loadToken() async {

@@ -30,7 +30,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.account_circle),
             title:  Text('Mój profil'.tr()),
             onTap: () {
-              Navigator.pushNamed(context, '/profile');
+              Navigator.of(context).pushNamed('/my_profile');
             },
           ),
           ListTile(

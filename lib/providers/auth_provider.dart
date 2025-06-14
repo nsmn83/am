@@ -22,6 +22,29 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> updateUserProfile({
+  required String image,
+  required String bio,
+}) async {
+  try {
+    final response = await _authService.updateUserProfile(
+      bio:  bio,
+      image: image,
+    );
+
+    // Zakładam, że backend zwraca zaktualizowane dane usera
+    _user = User.fromJson(response);
+    notifyListeners();
+
+    return true;
+  } catch (e) {
+    print('Failed to update user profile: $e');
+    return false;
+  }
+}
+
+
+
   /// Logowanie
   Future<bool> login(String email, String password) async {
     _isLoading = true;
