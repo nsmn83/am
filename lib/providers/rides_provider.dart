@@ -77,6 +77,33 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
+Future<bool> withdrawPassengerRequest(int requestId, int userId, int rideId) async {
+  _isLoading = true;
+  _error = null;
+  notifyListeners();
+
+  try {
+    await _ridesService.withdrawRequest(requestId, userId);
+
+    // Aktualizacja danych po operacji
+    await fetchMyRides();
+    await fetchRides();
+
+    if (_currentRide?.id == rideId) {
+      await fetchRideById(rideId);
+    }
+
+    return true;
+  } catch (e) {
+    _error = e.toString();
+    return false;
+  } finally {
+    _isLoading = false;
+    notifyListeners();
+  }
+}
+
+
   Future<void> fetchRideById(int rideId) async {_isLoading = true; _error = null; _currentRide = null; 
     _isLoading = true;
     _error = null;

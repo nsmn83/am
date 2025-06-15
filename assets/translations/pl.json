@@ -102,6 +102,7 @@
   "free_spot": "Wolne miejsce",
   "planned": "Zaplanowany",
   "in_progress": "W trakcie",
-  "done": "Zakończony"
+  "done": "Zakończony",
+  "withdraw_request": "Cofnij dołączenie"
 
 }

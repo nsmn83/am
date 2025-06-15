@@ -1,3 +1,4 @@
+import 'package:am_project/models/passenger_request.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/ride_map.dart';
@@ -32,12 +33,12 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
     required VoidCallback onReject,
   }) {
     return ListTile(
-  leading: GestureDetector(
-  onTap: () => PersonTile.showPersonDetailsDialog(context, passenger),
-  child: CircleAvatar(
-    backgroundImage: NetworkImage(passenger.image),
-  ),
-),
+      leading: GestureDetector(
+        onTap: () => PersonTile.showPersonDetailsDialog(context, passenger),
+        child: CircleAvatar(
+          backgroundImage: NetworkImage(passenger.image),
+        ),
+      ),
       title: Text(passenger.username),
       subtitle: Text('Email: ${passenger.email}'),
       trailing: Row(
@@ -56,95 +57,95 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
     );
   }
 
-String _translateStatus(String status) {
-  switch (status) {
-    case 'planned':
-      return 'planned'.tr();
-    case 'in_progress':
-      return 'in_progress'.tr();
-    case 'done':
-      return 'done'.tr();
-    default:
-      return status;
+  String _translateStatus(String status) {
+    switch (status) {
+      case 'planned':
+        return 'planned'.tr();
+      case 'in_progress':
+        return 'in_progress'.tr();
+      case 'done':
+        return 'done'.tr();
+      default:
+        return status;
+    }
   }
-}
 
- Widget _buildRideInfoSection(Ride ride) {
-  final acceptedRequests = ride.requests.where((r) => r.status == 'accepted').toList();
-  final int availableSpots = ride.maxPassengers - acceptedRequests.length;
+  Widget _buildRideInfoSection(Ride ride) {
+    final acceptedRequests = ride.requests.where((r) => r.status == 'accepted').toList();
+    final int availableSpots = ride.maxPassengers - acceptedRequests.length;
 
-  return Padding(
-    padding: const EdgeInsets.all(5),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-    Center(
-  child: Text(
-    '${ride.startAddress} - ${ride.endAddress}',
-    style: const TextStyle(
-      fontSize: 20, // Powiększ czcionkę
-      fontWeight: FontWeight.bold, // Opcjonalnie: pogrubienie
-    ),
-    textAlign: TextAlign.center,
-  ),
-),
-        const SizedBox(height: 4),
-        Divider(color: Theme.of(context).dividerColor),
-        Row(
-          children: [
-            Text('${'date_time'.tr()}: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text(ride.startTime.toString().substring(0, 16)),
-          ],
-        ),
-        const SizedBox(height: 4),
-  Row(
-  children: [
-    Text('${'status'.tr()}: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-    Text(_translateStatus(ride.status)),
-  ],
-),
-        const SizedBox(height: 4),
-        Text('${'description'.tr()}:', style: const TextStyle(fontWeight: FontWeight.bold)),
-        Text(ride.description.isNotEmpty ? ride.description : 'no_description'.tr()),
-        const SizedBox(height: 8),
-        Divider(color: Theme.of(context).dividerColor),
-        Row(
-          children: [
-            Text('passengers'.tr(), style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text(' (${acceptedRequests.length}/${ride.maxPassengers})'),
-          ],
-        ),
-        const SizedBox(height: 4),
-        SizedBox(
-          height: 140,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.all(12),
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Text(
+              '${ride.startAddress} - ${ride.endAddress}',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Divider(color: Theme.of(context).dividerColor),
+          Row(
             children: [
-              if (ride.driver != null)
-                PersonTile(person: ride.driver!, role: tr('driver')),
-              ...acceptedRequests.map((r) => PersonTile(person: r.person, role: tr('passenger'))),
-              ...List.generate(availableSpots, (index) {
-                return PersonTile(
-                  person: User(
-                    id: -1,
-                    username: tr('free_spot'),
-                    email: '',
-                    image: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg',
-                    bio: '',
-                  ),
-                  role: tr('passenger'),
-                  onTap: null,
-                );
-              }),
+              Text('${'date_time'.tr()}: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(ride.startTime.toString().substring(0, 16)),
             ],
           ),
-        ),
-        Divider(color: Theme.of(context).dividerColor),
-      ],
-    ),
-  );
-}
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Text('${'status'.tr()}: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(_translateStatus(ride.status)),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text('${'description'.tr()}:', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(ride.description.isNotEmpty ? ride.description : 'no_description'.tr()),
+          const SizedBox(height: 8),
+          Divider(color: Theme.of(context).dividerColor),
+          Row(
+            children: [
+              Text('passengers'.tr(), style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(' (${acceptedRequests.length}/${ride.maxPassengers})'),
+            ],
+          ),
+          const SizedBox(height: 4),
+          SizedBox(
+            height: 140,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.all(12),
+              children: [
+                if (ride.driver != null)
+                  PersonTile(person: ride.driver!, role: tr('driver')),
+                ...acceptedRequests.map((r) => PersonTile(person: r.person, role: tr('passenger'))),
+                ...List.generate(availableSpots, (index) {
+                  return PersonTile(
+                    person: User(
+                      id: -1,
+                      username: tr('free_spot'),
+                      email: '',
+                      image: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg',
+                      bio: '',
+                    ),
+                    role: tr('passenger'),
+                    onTap: null,
+                  );
+                }),
+              ],
+            ),
+          ),
+          Divider(color: Theme.of(context).dividerColor),
+        ],
+      ),
+    );
+  }
 
   Widget _buildPassengerRequestsExpansion(RidesProvider ridesProvider, List requests) {
     return ExpansionTile(
@@ -158,10 +159,10 @@ String _translateStatus(String status) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-  success
-    ? tr('request_accepted')
-    : tr('request_accept_failed', args: [ridesProvider.error ?? '']),
-),
+                  success
+                      ? tr('request_accepted')
+                      : tr('request_accept_failed', args: [ridesProvider.error ?? '']),
+                ),
               ),
             );
           },
@@ -170,11 +171,11 @@ String _translateStatus(String status) {
             if (!mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-             content: Text(
-  success
-    ? tr('request_rejected')
-    : tr('request_reject_failed', args: [ridesProvider.error ?? '']),
-),
+                content: Text(
+                  success
+                      ? tr('request_rejected')
+                      : tr('request_reject_failed', args: [ridesProvider.error ?? '']),
+                ),
               ),
             );
           },
@@ -222,6 +223,11 @@ String _translateStatus(String status) {
 
           final waitingRequests = ride.requests.where((request) => request.status == 'waiting').toList();
 
+          // Find the user's request if it exists
+          final userRequest = ride.requests
+    .where((request) => request.person.id == currentUser?.id)
+    .firstOrNull;
+
           return LayoutBuilder(
             builder: (context, constraints) {
               return SingleChildScrollView(
@@ -262,11 +268,11 @@ String _translateStatus(String status) {
                               if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                               content: Text(
-  success
-    ? tr('ride_status_updated')
-    : tr('ride_status_update_failed', args: [ridesProvider.error ?? '']),
-),
+                                  content: Text(
+                                    success
+                                        ? tr('ride_status_updated')
+                                        : tr('ride_status_update_failed', args: [ridesProvider.error ?? '']),
+                                  ),
                                 ),
                               );
                             },
@@ -288,11 +294,11 @@ String _translateStatus(String status) {
 
                               messenger.showSnackBar(
                                 SnackBar(
-             content: Text(
-  success
-    ? tr('ride_deleted')
-    : tr('ride_delete_failed', args: [ridesProvider.error ?? '']),
-),
+                                  content: Text(
+                                    success
+                                        ? tr('ride_deleted')
+                                        : tr('ride_delete_failed', args: [ridesProvider.error ?? '']),
+                                  ),
                                 ),
                               );
 
@@ -310,15 +316,39 @@ String _translateStatus(String status) {
                               if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-             content: Text(
-  success
-    ? tr('join_request_sent')
-    : tr('join_request_failed', args: [ridesProvider.error ?? '']),
-),
+                                  content: Text(
+                                    success
+                                        ? tr('join_request_sent')
+                                        : tr('join_request_failed', args: [ridesProvider.error ?? '']),
+                                  ),
                                 ),
                               );
                             },
                             child: Text('join_ride'.tr()),
+                          ),
+                        )
+                      else if (currentUser != null && hasPendingOrAcceptedRequest && userRequest != null)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final success = await ridesProvider.withdrawPassengerRequest(
+                                userRequest.id,
+                                currentUser.id,
+                                widget.rideId,
+                              );
+                              if (!mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    success
+                                        ? tr('request_withdrawn')
+                                        : tr('request_withdraw_failed', args: [ridesProvider.error ?? '']),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text('withdraw_request'.tr()),
                           ),
                         ),
 

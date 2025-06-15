@@ -101,5 +101,6 @@
   "free_spot": "Free spot",
   "planned": "Planned",
   "in_progress": "In progress",
-  "done": "Done"
+  "done": "Done",
+  "withdraw_request": "Withdraw request"
 }

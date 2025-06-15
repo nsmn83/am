@@ -21,6 +21,23 @@ class RidesService {
     debugPrint('-------------------');
   }
 
+  /// Wycofanie prosby / obecnosci z przejazdy
+  Future<void> withdrawRequest(int requestId, int userId) async {
+  try {
+    final path = 'rides/withdraw/$requestId/';
+    final queryParams = {'user_id': userId};
+
+    _logRequest('POST', path, queryParameters: queryParams);
+    final response = await _dio.post(path, queryParameters: queryParams);
+
+    if (response.data['status'] != 'rejected') {
+      throw Exception('Failed to withdraw request: unexpected response');
+    }
+  } catch (e) {
+    throw Exception('Failed to withdraw request: $e');
+    }
+  }
+
   /// Dodanie do backendu nowego przejazdu
   Future<void> createRide(Map<String, dynamic> rideData) async {
     try {

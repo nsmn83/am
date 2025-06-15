@@ -31,12 +31,16 @@ class _MyRidesScreenState extends State<MyRidesScreen> {
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         title:  Text('Moje Przejazdy'.tr()),
       ),
-      body: Column(
+      body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 10),
           RidesListWidget(ridesList: myRides),
         ],
       ),
+    ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.pushNamed(context, '/add_ride');
