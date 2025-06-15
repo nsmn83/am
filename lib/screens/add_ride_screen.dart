@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '../widgets/add_ride.dart';
 
 class AddRideScreen extends StatefulWidget {
-  const AddRideScreen({super.key}); // Add const constructor if needed
+  const AddRideScreen({super.key});
 
   @override
   _AddRideScreenState createState() => _AddRideScreenState();
 }
 
-class _AddRideScreenState extends State<AddRideScreen> {  // <-- extends State<AddRideScreen>
+class _AddRideScreenState extends State<AddRideScreen> {  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

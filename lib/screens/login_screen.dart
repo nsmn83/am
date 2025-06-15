@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/auth_provider.dart'; // Import AuthProvider
+import '../providers/auth_provider.dart'; 
 import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -47,7 +47,6 @@ Future<void> _login() async {
 
   @override
   Widget build(BuildContext context) {
-    //context.setLocale(Locale('en'));
     return Scaffold(
             appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,

@@ -44,10 +44,9 @@ class RidesProvider with ChangeNotifier {
 
     try {
       await _ridesService.createRide(rideData);
-      await fetchRides(); // Odśwież listę tylko przy sukcesie
+      await fetchRides(); 
       return true;
     } catch (e) {
-      // Nie ustawiamy errora globalnie
       return false;
     } finally {
       _isLoading = false;
@@ -151,7 +150,6 @@ Future<bool> rejectPassengerRequest(int requestId, int rideId) async {
 
     try {
       await _ridesService.deleteRide(rideId);
-      // Odśwież listy przejazdów
       await fetchMyRides();
       await fetchRides();
       return true;
@@ -171,11 +169,9 @@ Future<bool> rejectPassengerRequest(int requestId, int rideId) async {
 
     try {
       final newStatus = await _ridesService.progressRide(rideId);
-      // Odśwież bieżący przejazd, jeśli jest ustawiony
       if (_currentRide?.id == rideId) {
         await fetchRideById(rideId);
       }
-      // Odśwież listy przejazdów
       await fetchMyRides();
       await fetchRides();
       return true;
@@ -195,7 +191,6 @@ Future<bool> rejectPassengerRequest(int requestId, int rideId) async {
 
     try {
       await _ridesService.requestToJoinRide(rideId);
-      // Odśwież szczegóły przejazdu, jeśli jest ustawiony
       if (_currentRide?.id == rideId) {
         await fetchRideById(rideId);
       }

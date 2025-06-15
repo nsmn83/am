@@ -15,7 +15,6 @@ class _MyRidesScreenState extends State<MyRidesScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch user's rides on widget initialization
     Future.microtask(() => 
       Provider.of<RidesProvider>(context, listen: false).fetchMyRides()
     );
@@ -40,10 +39,8 @@ class _MyRidesScreenState extends State<MyRidesScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Navigate to AddRideScreen and wait for result
           final result = await Navigator.pushNamed(context, '/add_ride');
           if (result == true && mounted) {
-            // Reload rides if a ride was added successfully
             await Provider.of<RidesProvider>(context, listen: false).fetchMyRides();
           }
         },

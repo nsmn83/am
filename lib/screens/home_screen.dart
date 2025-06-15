@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
       drawer: const AppDrawer(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 16), // zapobiega ścinaniu ostatniego elementu
+          padding: const EdgeInsets.only(bottom: 16), 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

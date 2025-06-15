@@ -36,10 +36,10 @@ class Ride {
 
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
-      id: json['id'] as int? ?? 0, // Fallback if null
+      id: json['id'] as int? ?? 0, 
       driver: json['driver'] != null ? User.fromJson(json['driver'] as Map<String, dynamic>) : null,
       requests: (json['requests'] as List<dynamic>? ?? [])
-          .where((item) => item != null) // Filter out null items
+          .where((item) => item != null) 
           .map((item) => PassengerRequest.fromJson(item as Map<String, dynamic>))
           .toList(),
       startAddress: json['start_address'] as String? ?? '',

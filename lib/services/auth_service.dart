@@ -17,11 +17,9 @@ class AuthService {
   String? get token => _token;
 
   AuthService() {
-    // Add interceptor once on service initialization
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-  // Wyklucz endpointy login i register
   if (_token != null &&
       !options.path.endsWith('login/') &&
       !options.path.endsWith('register/')) {
@@ -30,18 +28,15 @@ class AuthService {
   handler.next(options);
 },
         onError: (DioError error, handler) async {
-          // Check if error is 401 (Unauthorized)
           if (error.response?.statusCode == 401) {
             final prefs = await SharedPreferences.getInstance();
             _refreshToken = prefs.getString('refresh_token');
             
             if (_refreshToken == null) {
-              // No refresh token, can't refresh -> logout user or return error
               return handler.next(error);
             }
 
             try {
-              // Try to refresh token
               final refreshResponse = await _dio.post('token/refresh/', data: {
                 'refresh': _refreshToken,
               });
@@ -49,13 +44,11 @@ class AuthService {
               _token = refreshResponse.data['access'];
               _refreshToken = refreshResponse.data['refresh'] ?? _refreshToken;
 
-              // Save new tokens to SharedPreferences
               await prefs.setString('auth_token', _token!);
               if (_refreshToken != null) {
                 await prefs.setString('refresh_token', _refreshToken!);
               }
 
-              // Update the failed request with new token and retry it
               final options = error.requestOptions;
               options.headers['Authorization'] = 'Bearer $_token';
 
@@ -63,7 +56,6 @@ class AuthService {
               return handler.resolve(response);
 
             } catch (e) {
-              // Refresh token invalid or refresh failed - logout or redirect to login
               await logout();
               return handler.next(error);
             }
@@ -90,7 +82,6 @@ class AuthService {
 
 
 
-  /// Initialize token from shared preferences
   Future<void> loadToken() async {
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('auth_token');
@@ -114,7 +105,6 @@ class AuthService {
       await prefs.setString('auth_token', _token!);
       await prefs.setString('refresh_token', _refreshToken!);
       
-      // Parse user data from response
       final userData = response.data;
       print('Tokens and user saved to SharedPreferences');
       
@@ -141,12 +131,11 @@ class AuthService {
       print('Response from server: ${response.data}');
 
       _token = response.data['tokens']['access'];
-      _refreshToken = response.data['tokens']['refresh']; // Save refresh token
+      _refreshToken = response.data['tokens']['refresh']; 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('auth_token', _token!);
       await prefs.setString('refresh_token', _refreshToken!);
 
-      // Parse user data from response
       final userData = response.data;
       print('Tokens and user saved to SharedPreferences');
 
@@ -175,10 +164,8 @@ await _dio.post(
 );
   } catch (e) {
     print('Logout request failed: $e');
-    // Możesz zdecydować, czy w przypadku błędu i tak usuwać tokeny lokalnie
   }
 
-  // Usuwanie tokenów lokalnie
   final prefs = await SharedPreferences.getInstance();
   await prefs.remove('auth_token');
   await prefs.remove('refresh_token');

@@ -19,7 +19,6 @@ class AuthProvider with ChangeNotifier {
 
   bool get isAuthenticated => token != null;
 
-  /// Inicjalizuj token przy starcie aplikacji
   Future<void> loadToken() async {
     await _authService.loadToken();
     notifyListeners();
@@ -35,7 +34,6 @@ class AuthProvider with ChangeNotifier {
       image: image,
     );
 
-    // Zakładam, że backend zwraca zaktualizowane dane usera
     _user = User.fromJson(response);
     notifyListeners();
 
@@ -48,7 +46,6 @@ class AuthProvider with ChangeNotifier {
 
 
 
-  /// Logowanie
   Future<bool> login(String email, String password) async {
     _isLoading = true;
     notifyListeners();
@@ -58,7 +55,7 @@ class AuthProvider with ChangeNotifier {
     _isLoading = false;
     
     if (result != null) {
-      _user = result['user'] as User; // Store the user
+      _user = result['user'] as User;
       notifyListeners();
       return true;
     }
@@ -67,7 +64,6 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
-  /// Rejestracja
   Future<bool> register(String username, String email, String password1, String password2) async {
     _isLoading = true;
     notifyListeners();
@@ -77,7 +73,7 @@ class AuthProvider with ChangeNotifier {
     _isLoading = false;
     
     if (result != null) {
-      _user = result['user'] as User; // Store the user
+      _user = result['user'] as User;
       notifyListeners();
       return true;
     }
@@ -96,7 +92,6 @@ Future<void> logout(BuildContext context) async {
   _user = null;
   notifyListeners();
 
-  // Reset innych providerów:
   final ridesProvider = Provider.of<RidesProvider>(context, listen: false);
   ridesProvider.reset();
 

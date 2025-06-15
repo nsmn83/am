@@ -122,7 +122,7 @@ class _AddRideFormState extends State<AddRideForm> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = context.locale; // wymusza rebuild przy zmianie języka
+    final locale = context.locale; 
 
     return Form(
       key: _formKey,
@@ -146,7 +146,7 @@ class _AddRideFormState extends State<AddRideForm> {
         decoration: InputDecoration(labelText: 'description_optional'.tr()),
           validator: (value) {
     if (value != null && value.length > 200) {
-      return 'description_too_long'.tr(); // np. "Opis nie może być dłuższy niż 200 znaków"
+      return 'description_too_long'.tr();
     }
     return null;
   },
@@ -221,7 +221,7 @@ class _AddRideFormState extends State<AddRideForm> {
         });
         return;
       }
-      //współrzędne
+
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
@@ -239,7 +239,7 @@ class _AddRideFormState extends State<AddRideForm> {
         speedAccuracy: 0.0,
       );
 
-      //reverse geocoding
+
       List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,

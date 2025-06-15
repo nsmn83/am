@@ -137,7 +137,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   ),
 ),
 
-// Jeśli chcesz też wyświetlić e-mail:
 Padding(
   padding: const EdgeInsets.symmetric(vertical: 8.0),
   child: Row(
