@@ -79,7 +79,6 @@ onPressed: () {
 },
             child:  Text('Search Rides'.tr()),
           ),
-          const SizedBox(height: 16),
           if (ridesProvider.error != null)
             Text(
               ridesProvider.error!,

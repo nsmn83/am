@@ -33,27 +33,26 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   }
 
   Future<void> _pickImage() async {
-    // Dla uproszczenia - wpisz URL zdjęcia w dialogu
     final url = await showDialog<String>(
       context: context,
       builder: (context) {
         final urlController = TextEditingController();
         return AlertDialog(
-          title: Text('Enter new image URL'.tr()),
+          title: Text('enter_url'.tr()),
           content: TextField(
   controller: urlController,
-  decoration: InputDecoration(hintText: 'Image URL'.tr()),
+  decoration: InputDecoration(hintText: 'image_url'.tr()),
   keyboardType: TextInputType.url,
 ),
 
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(null),
-              child: Text('Cancel'.tr()),
+              child: Text('cancel'.tr()),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(urlController.text.trim()),
-              child: Text('OK'.tr()),
+              child: Text('OK'),
             ),
           ],
         );
@@ -84,11 +83,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile updated successfully'.tr())),
+        SnackBar(content: Text('update_profile'.tr())),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update profile'.tr())),
+        SnackBar(content: Text('update_profile_failed'.tr())),
       );
     }
   }
@@ -96,17 +95,11 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthProvider>(context).user;
-
-    if (user == null) {
-      return Scaffold(
-        appBar: AppBar(title: Text('My Profile'.tr())),
-        body: Center(child: Text('User not logged in'.tr())),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Profile'.tr()),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        title: Text('Mój profil'.tr()),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -127,18 +120,19 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             const SizedBox(height: 12),
             TextButton(
               onPressed: _pickImage,
-              child: Text('Change profile picture'.tr()),
+              child: Text('change_picture'.tr()),
+              
             ),
-            const SizedBox(height: 20),
+             Divider(color: Theme.of(context).dividerColor),
           Padding(
   padding: const EdgeInsets.symmetric(vertical: 8.0),
   child: Row(
     children: [
       Text(
-        'Username: ',
+     '${'username'.tr()}:',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
-      Text(user.username),
+      Text(user!.username),
     ],
   ),
 ),
@@ -161,12 +155,13 @@ Padding(
               controller: _bioController,
               maxLines: 3,
               decoration: InputDecoration(
-                labelText: 'Bio'.tr(),
+                labelText: 'bio'.tr(),
                 border: const OutlineInputBorder(),
               ),
             ),
+      
             const SizedBox(height: 16),
-
+       Divider(color: Theme.of(context).dividerColor),
             const SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
@@ -174,7 +169,7 @@ Padding(
                 onPressed: _isSaving ? null : _saveProfile,
                 child: _isSaving
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('Save Changes'.tr()),
+                    : Text('save_changes'.tr()),
               ),
             ),
           ],

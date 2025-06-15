@@ -29,13 +29,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password1 = _passwordController.text;
     final password2 = _confirmPasswordController.text;
 
-    if (username.isEmpty || email.isEmpty || password1.isEmpty || password2.isEmpty) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'all_fields_required'.tr();
-      });
-      return;
-    }
+ if (username.isEmpty || email.isEmpty || password1.isEmpty || password2.isEmpty) {
+  setState(() {
+    _isLoading = false;
+  });
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('all_fields_required'.tr()),
+      backgroundColor: Colors.red,
+    ),
+  );
+  return;
+}
 
     if (password1 != password2) {
       setState(() {
@@ -64,7 +69,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('register'.tr())),
+                  appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        title: Text('register'.tr()),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -88,16 +97,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
               obscureText: true,
               decoration: InputDecoration(labelText: 'confirm_password'.tr()),
             ),
+                        TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/login'),
+              child: Text('already_have_account'.tr()),
+            ),
             const SizedBox(height: 20),
             _isLoading
                 ? const CircularProgressIndicator()
                 : ElevatedButton(
               onPressed: _register,
               child: Text('register_button'.tr()),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/login'),
-              child: Text('already_have_account'.tr()),
             ),
             if (_errorMessage != null)
               Padding(

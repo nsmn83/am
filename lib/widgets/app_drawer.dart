@@ -66,7 +66,7 @@ class AppDrawer extends StatelessWidget {
      onTap: () async {
   Navigator.of(context).pop(); // zamknij drawer
   final authProvider = Provider.of<AuthProvider>(context, listen: false);
-  await authProvider.logout();
+  await authProvider.logout(context);
   Navigator.pushReplacementNamed(context, '/login');
 },
           ),

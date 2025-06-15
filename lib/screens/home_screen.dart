@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../widgets/rides_filter.dart';
 import '../widgets/rides_list.dart';
 import '../widgets/app_drawer.dart';
-// Import AddRideScreen from its own file
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,15 +13,21 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title:  Text('Przejazdy'.tr()),
+        title: Text('Przejazdy'.tr()),
       ),
       drawer: const AppDrawer(),
-      body: const Column(
-        children: [
-          RidesFilterWidget(),
-          SizedBox(height: 10),
-          RidesListWidget(),
-        ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 16), // zapobiega ścinaniu ostatniego elementu
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              RidesFilterWidget(),
+              Divider(color: Theme.of(context).dividerColor),
+              RidesListWidget(),
+            ],
+          ),
+        ),
       ),
     );
   }

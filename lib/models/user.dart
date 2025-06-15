@@ -18,7 +18,7 @@ class User {
       id: json['id'] as int,
       username: json['username'] as String,
       email: json['email'] as String,
-      image: json['profile_image_url'] ?? 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Official_Presidential_Portrait_of_President_Donald_J._Trump_%282025%29.jpg/250px-Official_Presidential_Portrait_of_President_Donald_J._Trump_%282025%29.jpg',
+      image: json['profile_image_url'] ?? 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg',
       bio: (json['bio'] as String?) ?? 'Brak opisu',
     );
   }

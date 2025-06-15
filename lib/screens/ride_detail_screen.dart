@@ -26,50 +26,18 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
     });
   }
 
-  void _showPassengerDetailsDialog(User passenger) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(passenger.username),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(passenger.image),
-            ),
-            const SizedBox(height: 12),
-            Text('Email: ${passenger.email}'),
-            const SizedBox(height: 8),
-            Text('bio'.tr()),
-            Text(
-              passenger.bio.isNotEmpty ? passenger.bio : 'bio'.tr(),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(tr('close'.tr())),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildPassengerRequestTile({
     required User passenger,
     required VoidCallback onAccept,
     required VoidCallback onReject,
   }) {
     return ListTile(
-      leading: GestureDetector(
-        onTap: () => _showPassengerDetailsDialog(passenger),
-        child: CircleAvatar(
-          backgroundImage: NetworkImage(passenger.image),
-        ),
-      ),
+  leading: GestureDetector(
+  onTap: () => PersonTile.showPersonDetailsDialog(context, passenger),
+  child: CircleAvatar(
+    backgroundImage: NetworkImage(passenger.image),
+  ),
+),
       title: Text(passenger.username),
       subtitle: Text('Email: ${passenger.email}'),
       trailing: Row(
@@ -88,61 +56,95 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
     );
   }
 
-  Widget _buildRideInfoSection(Ride ride) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${'route'.tr()}: ${ride.startAddress} - ${ride.endAddress}',
-            textAlign: TextAlign.right,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Text('${'date_time'.tr()}: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(ride.startTime.toString().substring(0, 16)),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Text('${'status'.tr()}: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(ride.status),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text('${'description'.tr()}:', style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(ride.description.isNotEmpty ? ride.description : 'no_description'.tr()),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Text('passengers'.tr(), style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(' (${ride.requests.where((r) => r.status == 'accepted').length}/${ride.maxPassengers})'),
-            ],
-          ),
-          const SizedBox(height: 4),
-          SizedBox(
-            height: 140,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.all(12),
-              children: [
-                if (ride.driver != null)
-                  PersonTile(person: ride.driver!, role: tr('driver')),
-                ...ride.requests
-                    .where((r) => r.status == 'accepted')
-                    .map((r) => PersonTile(person: r.person, role: tr('passenger')))
-                    .toList(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+String _translateStatus(String status) {
+  switch (status) {
+    case 'planned':
+      return 'planned'.tr();
+    case 'in_progress':
+      return 'in_progress'.tr();
+    case 'done':
+      return 'done'.tr();
+    default:
+      return status;
   }
+}
+
+ Widget _buildRideInfoSection(Ride ride) {
+  final acceptedRequests = ride.requests.where((r) => r.status == 'accepted').toList();
+  final int availableSpots = ride.maxPassengers - acceptedRequests.length;
+
+  return Padding(
+    padding: const EdgeInsets.all(5),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+    Center(
+  child: Text(
+    '${ride.startAddress} - ${ride.endAddress}',
+    style: const TextStyle(
+      fontSize: 20, // Powiększ czcionkę
+      fontWeight: FontWeight.bold, // Opcjonalnie: pogrubienie
+    ),
+    textAlign: TextAlign.center,
+  ),
+),
+        const SizedBox(height: 4),
+        Divider(color: Theme.of(context).dividerColor),
+        Row(
+          children: [
+            Text('${'date_time'.tr()}: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(ride.startTime.toString().substring(0, 16)),
+          ],
+        ),
+        const SizedBox(height: 4),
+  Row(
+  children: [
+    Text('${'status'.tr()}: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+    Text(_translateStatus(ride.status)),
+  ],
+),
+        const SizedBox(height: 4),
+        Text('${'description'.tr()}:', style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(ride.description.isNotEmpty ? ride.description : 'no_description'.tr()),
+        const SizedBox(height: 8),
+        Divider(color: Theme.of(context).dividerColor),
+        Row(
+          children: [
+            Text('passengers'.tr(), style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(' (${acceptedRequests.length}/${ride.maxPassengers})'),
+          ],
+        ),
+        const SizedBox(height: 4),
+        SizedBox(
+          height: 140,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.all(12),
+            children: [
+              if (ride.driver != null)
+                PersonTile(person: ride.driver!, role: tr('driver')),
+              ...acceptedRequests.map((r) => PersonTile(person: r.person, role: tr('passenger'))),
+              ...List.generate(availableSpots, (index) {
+                return PersonTile(
+                  person: User(
+                    id: -1,
+                    username: tr('free_spot'),
+                    email: '',
+                    image: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg',
+                    bio: '',
+                  ),
+                  role: tr('passenger'),
+                  onTap: null,
+                );
+              }),
+            ],
+          ),
+        ),
+        Divider(color: Theme.of(context).dividerColor),
+      ],
+    ),
+  );
+}
 
   Widget _buildPassengerRequestsExpansion(RidesProvider ridesProvider, List requests) {
     return ExpansionTile(
@@ -229,7 +231,7 @@ class _RideDetailsScreenState extends State<RideDetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       SizedBox(
-                        height: 650,
+                        height: 500,
                         child: RideMap(
                           startLat: ride.startLat,
                           startLng: ride.startLng,

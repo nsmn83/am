@@ -10,4 +10,10 @@ class ThemeProvider with ChangeNotifier {
     _isDarkMode = !_isDarkMode;
     notifyListeners();
   }
+
+  void reset() {
+  _isDarkMode = false; 
+  notifyListeners();
 }
+}
+

@@ -37,6 +37,7 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
+
   Future<bool> addRide(Map<String, dynamic> rideData) async {
     _isLoading = true;
     notifyListeners();
@@ -207,4 +208,13 @@ Future<bool> rejectPassengerRequest(int requestId, int rideId) async {
       notifyListeners();
     }
   }
+
+  void reset() {
+  _isLoading = false;
+  _error = null;
+  _rides = [];
+  _myRides = [];
+  _currentRide = null;
+  notifyListeners();
+}
 }

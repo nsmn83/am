@@ -17,36 +17,43 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
-  Future<void> _login() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
+Future<void> _login() async {
+  setState(() {
+    _isLoading = true;
+  });
 
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
+  final email = _emailController.text.trim();
+  final password = _passwordController.text;
 
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final success = await authProvider.login(email, password);
+  final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  final success = await authProvider.login(email, password);
 
-    setState(() {
-      _isLoading = false;
-    });
+  setState(() {
+    _isLoading = false;
+  });
 
-    if (success) {
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      setState(() {
-        _errorMessage = 'LoginErr'.tr();
-      });
-    }
+  if (success) {
+    Navigator.pushReplacementNamed(context, '/home');
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('LoginErr'.tr()),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
     //context.setLocale(Locale('en'));
     return Scaffold(
-      appBar: AppBar(title: Text('Logowanie'.tr())),
+            appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        title: Text('Logowanie'.tr()),
+      ),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
@@ -60,6 +67,10 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
               decoration: InputDecoration(labelText: ('Hasło'.tr())),
             ),
+                        TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/register'),
+              child: Text(('NoAcc'.tr())),
+            ),
             SizedBox(height: 20),
             if (_errorMessage != null)
               Text(_errorMessage!, style: TextStyle(color: Colors.red)),
@@ -67,10 +78,6 @@ class _LoginScreenState extends State<LoginScreen> {
             _isLoading
                 ? CircularProgressIndicator()
                 : ElevatedButton(onPressed: _login, child: Text(('Zaloguj'.tr()))),
-            TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/register'),
-              child: Text(('NoAcc'.tr())),
-            ),
             TextButton(
               onPressed: () => {
                 if(context.locale==Locale('pl'))context.setLocale(Locale('en'))

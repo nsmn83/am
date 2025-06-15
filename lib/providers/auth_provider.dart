@@ -1,4 +1,7 @@
+import 'package:am_project/providers/rides_provider.dart';
+import 'package:am_project/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import 'package:dio/dio.dart';
 import '../models/user.dart';
@@ -83,15 +86,23 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
- Future<void> logout() async {
+Future<void> logout(BuildContext context) async {
   try {
     await _authService.logout();
   } catch (e) {
     print('Logout failed: $e');
-    // Możesz tu dodać np. retry lub inny handling
   }
-  _user = null; // Wyczyść dane usera niezależnie od sukcesu
+
+  _user = null;
   notifyListeners();
+
+  // Reset innych providerów:
+  final ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+  ridesProvider.reset();
+
+  final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+  themeProvider.reset();
 }
+
   Dio get dio => _authService.dio;
 }

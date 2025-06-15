@@ -92,6 +92,16 @@
   "join_request_sent": "Prośba o dołączenie została wysłana",
   "join_request_failed": "Nie udało się wysłać prośby: {0}",
   "change_status": "Zmień status",
-  "UseLoc": "Użyj mojej lokalizacji"
+  "UseLoc": "Użyj mojej lokalizacji",
+  "update_profile": "Dokonano edycji profilu",
+  "update_profile_failed": "Edycja profilu nie powiodła się",
+  "image_url": "URL zdjęcia",
+  "enter_url": "Wprowadź url zdjęcia",
+  "change_picture": "Zmień zdjęcie profilowe",
+  "save_changes": "Zapisz zmiany",
+  "free_spot": "Wolne miejsce",
+  "planned": "Zaplanowany",
+  "in_progress": "W trakcie",
+  "done": "Zakończony"
 
 }
