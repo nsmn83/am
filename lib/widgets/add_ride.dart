@@ -1,4 +1,4 @@
-//import 'dart:nativewrappers/_internal/vm/lib/internal_patch.dart';
+//Widget do doawania przejazdow
 
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -23,7 +23,6 @@ class _AddRideFormState extends State<AddRideForm> {
   final _maxPassengersController = TextEditingController();
   DateTime? _startDate;
   TimeOfDay? _startTime;
-  String? _location;
 
   @override
   void dispose() {
@@ -34,6 +33,7 @@ class _AddRideFormState extends State<AddRideForm> {
     super.dispose();
   }
 
+  //Wybranie daty
   Future<void> _selectDate(BuildContext context) async {
     final pickedDate = await showDatePicker(
       context: context,
@@ -48,6 +48,7 @@ class _AddRideFormState extends State<AddRideForm> {
     }
   }
 
+  //Wybranie godziny
   Future<void> _selectStartTime(BuildContext context) async {
     final pickedTime = await showTimePicker(
       context: context,
@@ -60,13 +61,7 @@ class _AddRideFormState extends State<AddRideForm> {
     }
   }
 
-  Future<void> _selectEndTime(BuildContext context) async {
-    final pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-  }
-
+  //Formatuje date
   String? _formatDateTime(DateTime? date, TimeOfDay? time) {
     if (date == null || time == null) return null;
     final dateTime = DateTime(
@@ -122,7 +117,6 @@ class _AddRideFormState extends State<AddRideForm> {
 
   @override
   Widget build(BuildContext context) {
-    final locale = context.locale; 
 
     return Form(
       key: _formKey,
@@ -198,7 +192,6 @@ class _AddRideFormState extends State<AddRideForm> {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         setState(() {
-          _location = '';
         });
         return;
       }
@@ -209,7 +202,6 @@ class _AddRideFormState extends State<AddRideForm> {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           setState(() {
-            _location = '';
           });
           return;
         }
@@ -217,7 +209,6 @@ class _AddRideFormState extends State<AddRideForm> {
 
       if (permission == LocationPermission.deniedForever) {
         setState(() {
-          _location = '';
         });
         return;
       }
@@ -226,18 +217,6 @@ class _AddRideFormState extends State<AddRideForm> {
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      Position testPosition = Position(
-        latitude: 52.2297,
-        longitude: 21.0122,
-        timestamp: DateTime.now(),
-        accuracy: 1.0,
-        altitude: 0.0,
-        heading: 0.0,
-        speed: 0.0,
-        headingAccuracy: 0.0,
-        altitudeAccuracy: 0.0,
-        speedAccuracy: 0.0,
-      );
 
 
       List<Placemark> placemarks = await placemarkFromCoordinates(
@@ -252,13 +231,11 @@ class _AddRideFormState extends State<AddRideForm> {
         });
       } else {
         setState(() {
-          _location = '';
         });
       }
     } catch (e) {
       e.toString();
       setState(() {
-        _location = '';
       });
     }
   }

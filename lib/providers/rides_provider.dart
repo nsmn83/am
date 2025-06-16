@@ -1,3 +1,5 @@
+//Provider do danych o przejazdach
+
 import 'package:flutter/foundation.dart';
 import '../services/rides_service.dart';
 import '../models/ride.dart';
@@ -7,21 +9,27 @@ class RidesProvider with ChangeNotifier {
 
   RidesProvider(this._ridesService);
 
+  //Informacja czy trwa komunikacja z backendem
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  //Tekst bledu
   String? _error;
   String? get error => _error;
 
+  //Pobrane przejazdy 
   List<Ride> _rides = [];
   List<Ride> get rides => _rides;
 
+  //Przejazdy w ktorych aktualnie zalogowany uzytkownik bierze udzial
   List<Ride> _myRides = [];
   List<Ride> get myRides => _myRides;
 
+  //Aktualnie wybrany przejazd
   Ride? _currentRide;
   Ride? get currentRide => _currentRide;
 
+  //Pobranie przejazdow w ktorych udzial bierze zalogowany uzytkownik
   Future<void> fetchMyRides() async {
     _isLoading = true;
     _error = null;
@@ -38,6 +46,7 @@ class RidesProvider with ChangeNotifier {
   }
 
 
+  //Dodanie przejazdu
   Future<bool> addRide(Map<String, dynamic> rideData) async {
     _isLoading = true;
     notifyListeners();
@@ -54,6 +63,7 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
+  //Pobranie przejazdow
   Future<void> fetchRides({
     String? startAddress,
     String? endAddress,
@@ -77,33 +87,34 @@ class RidesProvider with ChangeNotifier {
     }
   }
 
-Future<bool> withdrawPassengerRequest(int requestId, int userId, int rideId) async {
-  _isLoading = true;
-  _error = null;
-  notifyListeners();
-
-  try {
-    await _ridesService.withdrawRequest(requestId, userId);
-
-    // Aktualizacja danych po operacji
-    await fetchMyRides();
-    await fetchRides();
-
-    if (_currentRide?.id == rideId) {
-      await fetchRideById(rideId);
-    }
-
-    return true;
-  } catch (e) {
-    _error = e.toString();
-    return false;
-  } finally {
-    _isLoading = false;
+  //Wcyfoanie przez uzytkownika uczestnictwa / prosby o uczestnictwo w przejezdzie
+  Future<bool> withdrawPassengerRequest(int requestId, int userId, int rideId) async {
+    _isLoading = true;
+    _error = null;
     notifyListeners();
+
+    try {
+      await _ridesService.withdrawRequest(requestId, userId);
+
+      // Aktualizacja danych po operacji
+      await fetchMyRides();
+      await fetchRides();
+
+      if (_currentRide?.id == rideId) {
+        await fetchRideById(rideId);
+      }
+
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
-}
 
-
+  //Pobranie przejazdu o podanym ID
   Future<void> fetchRideById(int rideId) async {_isLoading = true; _error = null; _currentRide = null; 
     _isLoading = true;
     _error = null;
@@ -119,57 +130,57 @@ Future<bool> withdrawPassengerRequest(int requestId, int userId, int rideId) asy
     }
   }
 
-
-Future<bool> acceptPassengerRequest(int requestId, int rideId) async {
-  _isLoading = true;
-  _error = null;
-  notifyListeners();
-
-  try {
-    await _ridesService.acceptPassengerRequest(requestId);
-    await fetchMyRides();
-    await fetchRides();
-
-    if (_currentRide != null && _currentRide!.id == rideId) {
-      await fetchRideById(rideId);
-    }
-
-    return true;
-  } catch (e) {
-    _error = e.toString();
-    return false;
-  } finally {
-    _isLoading = false;
+  //Zaakceptowanie prosby o dolaczenie do przejazdu
+  Future<bool> acceptPassengerRequest(int requestId, int rideId) async {
+    _isLoading = true;
+    _error = null;
     notifyListeners();
-  }
-}
 
-Future<bool> rejectPassengerRequest(int requestId, int rideId) async {
-  _isLoading = true;
-  _error = null;
-  notifyListeners();
+    try {
+      await _ridesService.acceptPassengerRequest(requestId);
+      await fetchMyRides();
+      await fetchRides();
 
-  try {
-    await _ridesService.rejectPassengerRequest(requestId);
-    await fetchMyRides();
-    await fetchRides();
+      if (_currentRide != null && _currentRide!.id == rideId) {
+        await fetchRideById(rideId);
+      }
 
-    if (_currentRide != null && _currentRide!.id == rideId) {
-      await fetchRideById(rideId);
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    return true;
-  } catch (e) {
-    _error = e.toString();
-    return false;
-  } finally {
-    _isLoading = false;
-    notifyListeners();
   }
-}
 
+  //Odrzucenie prosby o dolaczenie do przejazdu
+  Future<bool> rejectPassengerRequest(int requestId, int rideId) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
 
+    try {
+      await _ridesService.rejectPassengerRequest(requestId);
+      await fetchMyRides();
+      await fetchRides();
 
+      if (_currentRide != null && _currentRide!.id == rideId) {
+        await fetchRideById(rideId);
+      }
+
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  //Usuniecie przejazdu
   Future<bool> deleteRide(int rideId) async {
     _isLoading = true;
     _error = null;
@@ -189,13 +200,14 @@ Future<bool> rejectPassengerRequest(int requestId, int rideId) async {
     }
   }
 
+  //Zmiana statusu przejazdu na kolejny (zaplanowany -> w trakcie -> skonoczny)
   Future<bool> progressRide(int rideId) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      final newStatus = await _ridesService.progressRide(rideId);
+      await _ridesService.progressRide(rideId);
       if (_currentRide?.id == rideId) {
         await fetchRideById(rideId);
       }
@@ -211,6 +223,7 @@ Future<bool> rejectPassengerRequest(int requestId, int rideId) async {
     }
   }
 
+  //Wyslanie prosby o dolaczenie do przejazdu
   Future<bool> requestToJoinRide(int rideId) async {
     _isLoading = true;
     _error = null;
@@ -231,6 +244,7 @@ Future<bool> rejectPassengerRequest(int requestId, int rideId) async {
     }
   }
 
+  //Zresetowanie danych przechowywanych przez providery
   void reset() {
   _isLoading = false;
   _error = null;

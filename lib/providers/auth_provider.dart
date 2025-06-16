@@ -1,3 +1,5 @@
+//Provider do danych uzytkownika
+
 import 'package:am_project/providers/rides_provider.dart';
 import 'package:am_project/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -19,33 +21,28 @@ class AuthProvider with ChangeNotifier {
 
   bool get isAuthenticated => token != null;
 
-  Future<void> loadToken() async {
-    await _authService.loadToken();
-    notifyListeners();
-  }
-
+  //Aktualizacja opisu i zdjecia profilowego
   Future<bool> updateUserProfile({
   required String image,
   required String bio,
-}) async {
-  try {
-    final response = await _authService.updateUserProfile(
-      bio:  bio,
-      image: image,
-    );
+  }) async {
+    try {
+      final response = await _authService.updateUserProfile(
+        bio:  bio,
+        image: image,
+      );
 
     _user = User.fromJson(response);
     notifyListeners();
 
     return true;
   } catch (e) {
-    print('Failed to update user profile: $e');
-    return false;
+      print('Failed to update user profile: $e');
+      return false;
   }
 }
 
-
-
+  //Logowanie
   Future<bool> login(String email, String password) async {
     _isLoading = true;
     notifyListeners();
@@ -64,6 +61,7 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
+  //Rejestracja
   Future<bool> register(String username, String email, String password1, String password2) async {
     _isLoading = true;
     notifyListeners();
@@ -82,22 +80,23 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
-Future<void> logout(BuildContext context) async {
-  try {
-    await _authService.logout();
-  } catch (e) {
-    print('Logout failed: $e');
+  //Wylogowywanie
+  Future<void> logout(BuildContext context) async {
+    try {
+      await _authService.logout();
+    } catch (e) {
+      print('Logout failed: $e');
+    }
+
+    _user = null;
+    notifyListeners();
+
+    final ridesProvider = Provider.of<RidesProvider>(context, listen: false);
+    ridesProvider.reset();
+
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    themeProvider.reset();
   }
-
-  _user = null;
-  notifyListeners();
-
-  final ridesProvider = Provider.of<RidesProvider>(context, listen: false);
-  ridesProvider.reset();
-
-  final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-  themeProvider.reset();
-}
 
   Dio get dio => _authService.dio;
 }

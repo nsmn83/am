@@ -63,12 +63,12 @@ class AppDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text('Wyloguj się'.tr()),
-     onTap: () async {
-  Navigator.of(context).pop(); // zamknij drawer
-  final authProvider = Provider.of<AuthProvider>(context, listen: false);
-  await authProvider.logout(context);
-  Navigator.pushReplacementNamed(context, '/login');
-},
+            onTap: () async {
+            Navigator.of(context).pop(); 
+            final authProvider = Provider.of<AuthProvider>(context, listen: false);
+            await authProvider.logout(context);
+            Navigator.pushReplacementNamed(context, '/login');
+            },
           ),
         ],
       ),

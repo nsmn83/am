@@ -11,7 +11,6 @@ import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/rides_provider.dart';
 import 'services/rides_service.dart';
-import 'models/ride.dart';
 import 'screens/my_profile_screen.dart';
 
 void main() async{
@@ -19,7 +18,6 @@ void main() async{
   await EasyLocalization.ensureInitialized();
 
   runApp(
-
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('pl')],
       path: 'assets/translations', // ścieżka do plików JSON
@@ -27,10 +25,9 @@ void main() async{
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => ThemeProvider()),
-          ChangeNotifierProvider(create: (_) => AuthProvider()..loadToken()),
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
           Provider(
-            create: (context) => RidesService(
-              Provider.of<AuthProvider>(context, listen: false).dio,
+            create: (context) => RidesService(Provider.of<AuthProvider>(context, listen: false).dio,
             ),
           ),
           ChangeNotifierProvider(
@@ -57,15 +54,19 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
- theme: ThemeData(
-  brightness: Brightness.light,
-  useMaterial3: true,
-),
-darkTheme: ThemeData(
-  brightness: Brightness.dark,
-  useMaterial3: true,
-),
+
+      //Zdefiniowanie motywow
+       theme: ThemeData(
+        brightness: Brightness.light,
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        useMaterial3: true,
+      ),
       themeMode: themeProvider.currentTheme,
+
+
       initialRoute: '/login',
       routes: {
         '/login': (context) => LoginScreen(),

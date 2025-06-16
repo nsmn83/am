@@ -92,21 +92,23 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final user = Provider.of<AuthProvider>(context).user;
-    return Scaffold(
-      appBar: AppBar(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-        foregroundColor: Theme.of(context).colorScheme.onPrimary,
-        title: Text('Mój profil'.tr()),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: _pickImage,
+@override
+Widget build(BuildContext context) {
+  final user = Provider.of<AuthProvider>(context).user;
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+      title: Text('Mój profil'.tr()),
+    ),
+    body: SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: _pickImage,
+            child: Center(
               child: CircleAvatar(
                 radius: 60,
                 backgroundImage: (_imageUrl != null && _imageUrl!.isNotEmpty)
@@ -117,63 +119,66 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     : null,
               ),
             ),
-            const SizedBox(height: 12),
-            TextButton(
+          ),
+          const SizedBox(height: 12),
+          Center(
+            child: TextButton(
               onPressed: _pickImage,
               child: Text('change_picture'.tr()),
-              
             ),
-             Divider(color: Theme.of(context).dividerColor),
+          ),
+          const SizedBox(height: 16),
+          Divider(color: Theme.of(context).dividerColor),
+          const SizedBox(height: 16),
           Padding(
-  padding: const EdgeInsets.symmetric(vertical: 8.0),
-  child: Row(
-    children: [
-      Text(
-     '${'username'.tr()}:',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      Text(user!.username),
-    ],
-  ),
-),
-
-Padding(
-  padding: const EdgeInsets.symmetric(vertical: 8.0),
-  child: Row(
-    children: [
-      Text(
-        'Email: ',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      Text(user.email),
-    ],
-  ),
-),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _bioController,
-              maxLines: 3,
-              decoration: InputDecoration(
-                labelText: 'bio'.tr(),
-                border: const OutlineInputBorder(),
-              ),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              children: [
+                Text(
+                  '${'username'.tr()}: ',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(user!.username),
+              ],
             ),
-      
-            const SizedBox(height: 16),
-       Divider(color: Theme.of(context).dividerColor),
-            const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _isSaving ? null : _saveProfile,
-                child: _isSaving
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : Text('save_changes'.tr()),
-              ),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              children: [
+                const Text(
+                  'Email: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(user.email),
+              ],
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 24),
+          TextField(
+            controller: _bioController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              labelText: 'bio'.tr(),
+              border: const OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Divider(color: Theme.of(context).dividerColor),
+          const SizedBox(height: 30),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _isSaving ? null : _saveProfile,
+              child: _isSaving
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : Text('save_changes'.tr()),
+            ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

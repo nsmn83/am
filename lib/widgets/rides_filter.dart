@@ -13,20 +13,43 @@ class RidesFilterWidget extends StatefulWidget {
 class _RidesFilterWidgetState extends State<RidesFilterWidget> {
   final _startController = TextEditingController();
   final _endController = TextEditingController();
-  final _dateController = TextEditingController();
+  DateTime? _selectedDate; // Zmienna do przechowywania wybranej daty
 
   @override
   void dispose() {
     _startController.dispose();
     _endController.dispose();
-    _dateController.dispose();
     super.dispose();
   }
 
+  // Funkcja do wyboru daty za pomocą DatePicker
+  Future<void> _selectDate(BuildContext context) async {
+    setState(() {
+      _selectedDate = null; 
+    });
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    }
+  }
+
+  // Formatowanie daty do stringa w formacie YYYY-MM-DD
+  String? _formatDate(DateTime? date) {
+    if (date == null) return null;
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+  //Budowanie UI
   @override
   Widget build(BuildContext context) {
     final ridesProvider = Provider.of<RidesProvider>(context);
-  
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -34,7 +57,7 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
         children: [
           TextField(
             controller: _startController,
-            decoration:  InputDecoration(
+            decoration: InputDecoration(
               labelText: 'AdresStart'.tr(),
             ),
           ),
@@ -44,40 +67,27 @@ class _RidesFilterWidgetState extends State<RidesFilterWidget> {
               labelText: 'AdresEnd'.tr(),
             ),
           ),
-          TextField(
-            controller: _dateController,
-            keyboardType: TextInputType.datetime,
-            decoration:  InputDecoration(
-              labelText: 'DateForm'.tr(),
+          ListTile(
+            title: Text(
+              _selectedDate == null
+                  ? 'DateForm'.tr()
+                  : '${'DateForm'.tr()}: ${_formatDate(_selectedDate)}',
             ),
+            trailing: const Icon(Icons.calendar_today),
+            onTap: () => _selectDate(context),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-onPressed: () {
-  final dateText = _dateController.text.trim();
-  DateTime? parsedDate;
-
-  if (dateText.isNotEmpty) {
-    parsedDate = DateTime.tryParse(dateText);
-    if (parsedDate == null) {
-      // Show an error using a dialog or snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('DateFormErr'.tr()),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return; // Do not proceed
-    }
-  }
-
-  ridesProvider.fetchRides(
-    startAddress: _startController.text.isNotEmpty ? _startController.text : null,
-    endAddress: _endController.text.isNotEmpty ? _endController.text : null,
-    date: dateText.isNotEmpty ? dateText : null,
-  );
-},
-            child:  Text('Search Rides'.tr()),
+            onPressed: () {
+              final dateText = _formatDate(_selectedDate);
+              ridesProvider.fetchRides(
+                startAddress: _startController.text.isNotEmpty ? _startController.text : null,
+                endAddress: _endController.text.isNotEmpty ? _endController.text : null,
+                date: dateText,
+              );
+            },
+            child: Text('Search Rides'.tr()),
+            
           ),
           if (ridesProvider.error != null)
             Text(

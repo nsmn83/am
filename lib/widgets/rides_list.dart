@@ -32,44 +32,43 @@ class RidesListWidget extends StatelessWidget {
 
     return ListView.builder(
       shrinkWrap: true,
-physics: NeverScrollableScrollPhysics(),
-        itemCount: ridesToShow.length,
-        itemBuilder: (context, index) {
-          final Ride ride = ridesToShow[index];
-
-          return Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(ride.driver!.image),
-              ),
-              title: Text(
-                '${ride.startAddress} - ${ride.endAddress}',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${'date'.tr()}: ${ride.startTime.toString().substring(0, 10)} '
-                    '${'time'.tr()}: ${ride.startTime.toString().substring(11, 16)}',
-                  ),
-                  Text(
-                    '${'driver'.tr()}: ${ride.driver?.username ?? 'Unknown'}',
-                  ),
-                ],
-              ),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  '/ride_details',
-                  arguments: ride.id,
-                );
-              },
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: ridesToShow.length,
+      itemBuilder: (context, index) {
+        final Ride ride = ridesToShow[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: ListTile(
+            leading: CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(ride.driver!.image),
             ),
-          );
+            title: Text(
+              '${ride.startAddress} - ${ride.endAddress}',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${'date'.tr()}: ${ride.startTime.toString().substring(0, 10)} '
+                  '${'time'.tr()}: ${ride.startTime.toString().substring(11, 16)}',
+                ),
+                Text(
+                  '${'driver'.tr()}: ${ride.driver?.username ?? 'Unknown'}',
+                ),
+              ],
+            ),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                '/ride_details',
+                arguments: ride.id,
+              );
+            },
+          ),
+        );
         },
       );
   }

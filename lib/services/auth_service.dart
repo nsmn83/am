@@ -20,13 +20,13 @@ class AuthService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-  if (_token != null &&
-      !options.path.endsWith('login/') &&
-      !options.path.endsWith('register/')) {
-    options.headers['Authorization'] = 'Bearer $_token';
-  }
-  handler.next(options);
-},
+          if (_token != null &&
+            !options.path.endsWith('login/') &&
+            !options.path.endsWith('register/')) {
+            options.headers['Authorization'] = 'Bearer $_token';
+          }
+      handler.next(options);
+      },
         onError: (DioError error, handler) async {
           if (error.response?.statusCode == 401) {
             final prefs = await SharedPreferences.getInstance();
@@ -66,28 +66,19 @@ class AuthService {
     );
   }
 
+  //aktualizacja profilu uzytkownika
   Future<Map<String, dynamic>> updateUserProfile({
   required String image,
   required String bio,
-}) async {
-  final data = {
-    'bio': bio,
-    'profile_image_url': image,
-  };
+  }) async {
+    final data = {
+      'bio': bio,
+      'profile_image_url': image,
+    };
 
-  final response = await _dio.patch('user/edit-bio/', data: data);
+    final response = await _dio.patch('user/edit-bio/', data: data);
 
-  return response.data;
-}
-
-
-
-  Future<void> loadToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString('auth_token');
-    _refreshToken = prefs.getString('refresh_token');
-    print('Loaded access token: $_token');
-    print('Loaded refresh token: $_refreshToken');
+    return response.data;
   }
 
   Future<Map<String, dynamic>?> login(String email, String password) async {
@@ -137,7 +128,6 @@ class AuthService {
       await prefs.setString('refresh_token', _refreshToken!);
 
       final userData = response.data;
-      print('Tokens and user saved to SharedPreferences');
 
       return {
         'user': User.fromJson(userData),
@@ -145,23 +135,23 @@ class AuthService {
         'refresh_token': _refreshToken,
       };
     } catch (e) {
-      print('Registration failed: $e');
       return null;
     }
   }
 
+//Wylogowanie 
 Future<void> logout() async {
   try {
     final prefs = await SharedPreferences.getInstance();
-final refreshToken = prefs.getString('refresh_token');
+    final refreshToken = prefs.getString('refresh_token');
 
-await _dio.post(
-  'logout/',
-  data: {'refresh': refreshToken},
-  options: Options(
-    headers: {'Authorization': 'Bearer $_token'},
-  ),
-);
+    await _dio.post(
+      'logout/',
+      data: {'refresh': refreshToken},
+      options: Options(
+        headers: {'Authorization': 'Bearer $_token'},
+      ),
+    );
   } catch (e) {
     print('Logout request failed: $e');
   }

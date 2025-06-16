@@ -65,8 +65,7 @@ final isPlaceholder = person.id == -1 || person.username == tr('free_spot');
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-   isPlaceholder
-            ? CircleAvatar(
+        isPlaceholder ? CircleAvatar(
                 radius: 30,
                 backgroundImage: NetworkImage(person.image),
               )

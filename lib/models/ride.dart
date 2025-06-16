@@ -3,7 +3,7 @@ import 'passenger_request.dart';
 
 class Ride {
   final int id;
-  final User? driver; // Made nullable
+  final User driver; 
   final List<PassengerRequest> requests;
   final String startAddress;
   final String endAddress;
@@ -19,7 +19,7 @@ class Ride {
 
   Ride({
     required this.id,
-    this.driver, // Nullable
+    required this.driver,
     required this.requests,
     required this.startAddress,
     required this.endAddress,
@@ -37,9 +37,9 @@ class Ride {
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
       id: json['id'] as int? ?? 0, 
-      driver: json['driver'] != null ? User.fromJson(json['driver'] as Map<String, dynamic>) : null,
+      driver: User.fromJson(json['driver'] as Map<String, dynamic>),
       requests: (json['requests'] as List<dynamic>? ?? [])
-          .where((item) => item != null) 
+          .where((item) => item != null)
           .map((item) => PassengerRequest.fromJson(item as Map<String, dynamic>))
           .toList(),
       startAddress: json['start_address'] as String? ?? '',

@@ -1,3 +1,5 @@
+//Provider do kontrolowania motywu aplikacji
+
 import 'package:flutter/material.dart';
 
 class ThemeProvider with ChangeNotifier {

@@ -107,7 +107,7 @@ class RidesService {
         throw Exception('Response data is null');
       }
       if (response.data is! List) {
-        throw Exception('Unexpected response format: expected a List');
+        throw Exception('Unexpected response format');
       }
 
       final List<dynamic> data = response.data;
@@ -134,7 +134,7 @@ Future<void> acceptPassengerRequest(int requestId) async {
   try {
     _logRequest('POST', 'rides/accept/$requestId/');
     final response = await _dio.post('rides/accept/$requestId/');
-
+    
     if (response.data['status'] != 'accepted') {
       throw Exception('Failed to accept passenger request: unexpected response');
     }
@@ -182,9 +182,6 @@ Future<void> rejectPassengerRequest(int requestId) async {
     try {
       _logRequest('POST', 'rides/delete/$rideId/');
       final response = await _dio.post('rides/delete/$rideId/');
-      if (response.data['status'] != 'deleted') {
-        throw Exception('Failed to delete ride: unexpected response');
-      }
     } catch (e) {
       throw Exception('Failed to delete ride: $e');
     }
