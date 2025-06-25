@@ -1,16 +1,11 @@
 # am_project
+<h2>Projekt aplikacji na przedmiot aplikacje mobilne.</h2>
 
-A new Flutter project.
+Aplikacja służy do znajdowania pasażerów / kierowców do wspólnych przejazdów.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Użytkownik może szukać istniejących przejazdów:
+<div style="display: flex; gap: 10px; margin-top: 10px; margin-bottom: 10px;">
+  <img src="lib/screenshots/main_screen.jpg" alt="Ekran główny" width="200"/>
+  <img src="lib/screenshots/detail_screen.jpg" alt="Szczegóły przejazdu" width="200"/>
+  <img src="lib/screenshots/profile_info_screen.jpg" alt="Profil uczestnika" width="200"/>
+</div>
